@@ -1,0 +1,658 @@
+name: admin
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/medicines
+    metadata:
+      groupName: admin
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store new medicine'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {access_token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      scientific_name:
+        name: scientific_name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: ki
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      trade_name:
+        name: trade_name
+        description: 'Must not be greater than 70 characters.'
+        required: true
+        example: mfbzg
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      type:
+        name: type
+        description: 'Must not be greater than 70 characters.'
+        required: true
+        example: pfbvgyguxvmw
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      manufacturer_id:
+        name: manufacturer_id
+        description: ''
+        required: true
+        example: et
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      quantity:
+        name: quantity
+        description: 'Must be at least 1.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      price:
+        name: price
+        description: 'Must be at least 1.'
+        required: true
+        example: 57
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      days:
+        name: days
+        description: ''
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      months:
+        name: months
+        description: ''
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      years:
+        name: years
+        description: ''
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      scientific_name: ki
+      trade_name: mfbzg
+      type: pfbvgyguxvmw
+      manufacturer_id: et
+      quantity: 17
+      price: 57
+      days: 10
+      months: 9
+      years: 16
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "medicine": {
+          "scientific_name": "1",
+          "trade_name": "1",
+          "type": "1",
+          "manufacturer_id": "100",
+          "quantity": "1",
+          "price": "11",
+          "expires_at": "2024-10-20T19:00:27.554469Z",
+          "creator_id": 1,
+          "updated_at": "2024-09-19T19:00:27.000000Z",
+          "created_at": "2024-09-19T19:00:27.000000Z",
+          "id": 10002
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+          "message": "User does not have the right roles."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+          "message": "The scientific name field is required. (and 8 more errors)",
+          "errors": {
+          "scientific_name": [
+          "The scientific name field is required."
+          ],
+          "trade_name": [
+          "The trade name field is required."
+          ],
+          "type": [
+          "The type field is required."
+          ],
+          "manufacturer_id": [
+          "The selected manufacturer id is invalid."
+          ],
+          "quantity": [
+          "The quantity field is required."
+          ],
+          "price": [
+          "The price field is required."
+          ],
+          "days": [
+          "The days field is required."
+          ],
+          "months": [
+          "The months field is required."
+          ],
+          "years": [
+          "The years field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/medicines/{id}'
+    metadata:
+      groupName: admin
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'updating a specific medicine'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {access_token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the medicine.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 2
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      scientific_name:
+        name: scientific_name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: e
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      trade_name:
+        name: trade_name
+        description: 'Must not be greater than 70 characters.'
+        required: true
+        example: luicmbhbvmel
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      type:
+        name: type
+        description: 'Must not be greater than 70 characters.'
+        required: true
+        example: lj
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      manufacturer_id:
+        name: manufacturer_id
+        description: ''
+        required: true
+        example: molestiae
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      quantity:
+        name: quantity
+        description: 'Must be at least 1.'
+        required: true
+        example: 48
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      price:
+        name: price
+        description: 'Must be at least 1.'
+        required: true
+        example: 35
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      days:
+        name: days
+        description: ''
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      months:
+        name: months
+        description: ''
+        required: true
+        example: 11
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      years:
+        name: years
+        description: ''
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      scientific_name: e
+      trade_name: luicmbhbvmel
+      type: lj
+      manufacturer_id: molestiae
+      quantity: 48
+      price: 35
+      days: 8
+      months: 11
+      years: 2
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "medicine": {
+          "scientific_name": "1",
+          "trade_name": "1",
+          "type": "1",
+          "manufacturer_id": "100",
+          "quantity": "1",
+          "price": "11",
+          "expires_at": "2024-10-20T19:00:27.554469Z",
+          "creator_id": 1,
+          "updated_at": "2024-09-19T19:00:27.000000Z",
+          "created_at": "2024-09-19T19:00:27.000000Z",
+          "id": 10002
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+          "message": "User does not have the right roles."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+          "message": "The scientific name field is required. (and 8 more errors)",
+          "errors": {
+          "scientific_name": [
+          "The scientific name field is required."
+          ],
+          "trade_name": [
+          "The trade name field is required."
+          ],
+          "type": [
+          "The type field is required."
+          ],
+          "manufacturer_id": [
+          "The selected manufacturer id is invalid."
+          ],
+          "quantity": [
+          "The quantity field is required."
+          ],
+          "price": [
+          "The price field is required."
+          ],
+          "days": [
+          "The days field is required."
+          ],
+          "months": [
+          "The months field is required."
+          ],
+          "years": [
+          "The years field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/medicines/{medicine_id}'
+    metadata:
+      groupName: admin
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'moving  a specific medicine to trash'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {access_token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      medicine_id:
+        name: medicine_id
+        description: 'The ID of the medicine.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      medicine_id: 2
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "message": "medicine deleted successfully"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+          "message": "User does not have the right roles."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+          "message": " not found."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/medicines/{medicine}/restore'
+    metadata:
+      groupName: admin
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'restore a specific medicine from trash'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {access_token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      medicine:
+        name: medicine
+        description: 'The medicine.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      medicine: 2
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          'message' => 'medicine restored successfully'
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+              'message' => 'medicine not restored because it is already restored'
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+          "message": "User does not have the right roles."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+          "message": " not found."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/medicines/{medicine}/force_delete'
+    metadata:
+      groupName: admin
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'delete a specific medicine forever from trash'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {access_token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      medicine:
+        name: medicine
+        description: 'The medicine.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      medicine: 2
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          'message' => 'medicine deleted successfully'
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+              'message' => 'medicine cant be deleted'
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+          "message": "User does not have the right roles."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+          "message": " not found."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

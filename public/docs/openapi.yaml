@@ -1,0 +1,1702 @@
+openapi: 3.0.3
+info:
+  title: app
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://127.0.0.1:8000'
+paths:
+  /api/forget_password:
+    post:
+      summary: ''
+      operationId: postApiForget_password
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: breanna.bosco@example.org
+              required:
+                - email
+  /api/login:
+    post:
+      summary: ''
+      operationId: postApiLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: therese61@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters. Must not be greater than 20 characters.'
+                  example: "ACB.<Q=47`mMj'vN=<V"
+              required:
+                - email
+                - password
+      security: []
+  /api/register:
+    post:
+      summary: ''
+      operationId: postApiRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: nokffq
+                last_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: mzewlyjcqpvi
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: zdach@example.org
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters. Must not be greater than 100 characters.'
+                  example: 'pP~*?a}xZdfUQp5(l@l'
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+      security: []
+  /api/auth/google:
+    get:
+      summary: ''
+      operationId: getApiAuthGoogle
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='https://accounts.google.com/o/oauth2/auth?client_id=801521848260-mflkqrs744bon1k7p8rk2o1c13u447a4.apps.googleusercontent.com&amp;redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fgoogle%2Fcallback&amp;scope=openid+profile+email&amp;response_type=code'\" />\n\n        <title>Redirecting to https://accounts.google.com/o/oauth2/auth?client_id=801521848260-mflkqrs744bon1k7p8rk2o1c13u447a4.apps.googleusercontent.com&amp;redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fgoogle%2Fcallback&amp;scope=openid+profile+email&amp;response_type=code</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"https://accounts.google.com/o/oauth2/auth?client_id=801521848260-mflkqrs744bon1k7p8rk2o1c13u447a4.apps.googleusercontent.com&amp;redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fgoogle%2Fcallback&amp;scope=openid+profile+email&amp;response_type=code\">https://accounts.google.com/o/oauth2/auth?client_id=801521848260-mflkqrs744bon1k7p8rk2o1c13u447a4.apps.googleusercontent.com&amp;redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fgoogle%2Fcallback&amp;scope=openid+profile+email&amp;response_type=code</a>.\n    </body>\n</html>"
+      tags:
+        - Authorization
+      security: []
+  /api/change_password:
+    put:
+      summary: ''
+      operationId: putApiChange_password
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  description: ''
+                  example: neque
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: GfCoLF$
+                password_confirmation:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: eirkpchejekwnbzjhurwsjsuvhkcnavawmgnvltzkbbbfh
+              required:
+                - old_password
+                - password
+                - password_confirmation
+  /api/logout:
+    post:
+      summary: ''
+      operationId: postApiLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+  /api/update:
+    put:
+      summary: ''
+      operationId: putApiUpdate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+  /api/delete_account:
+    delete:
+      summary: ''
+      operationId: deleteApiDelete_account
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+  /api/resend_email_verification_link:
+    post:
+      summary: ''
+      operationId: postApiResend_email_verification_link
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Authorization
+  /api/documentation:
+    get:
+      summary: 'Display Swagger API page.'
+      operationId: displaySwaggerAPIPage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>L5 Swagger UI</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"http://127.0.0.1:8000/docs/asset/swagger-ui.css?v=fd5df98cfc0e58ed507042cd86a1f1df\">\n    <link rel=\"icon\" type=\"image/png\" href=\"http://127.0.0.1:8000/docs/asset/favicon-32x32.png?v=40d4f2c38d1cd854ad463f16373cbcb6\" sizes=\"32x32\"/>\n    <link rel=\"icon\" type=\"image/png\" href=\"http://127.0.0.1:8000/docs/asset/favicon-16x16.png?v=f0ae831196d55d8f4115b6c5e8ec5384\" sizes=\"16x16\"/>\n    <style>\n    html\n    {\n        box-sizing: border-box;\n        overflow: -moz-scrollbars-vertical;\n        overflow-y: scroll;\n    }\n    *,\n    *:before,\n    *:after\n    {\n        box-sizing: inherit;\n    }\n\n    body {\n      margin:0;\n      background: #fafafa;\n    }\n    </style>\n    </head>\n\n<body >\n<div id=\"swagger-ui\"></div>\n\n<script src=\"http://127.0.0.1:8000/docs/asset/swagger-ui-bundle.js?v=bccc97f77bdb8edc590ae3abdf83b9a7\"></script>\n<script src=\"http://127.0.0.1:8000/docs/asset/swagger-ui-standalone-preset.js?v=861c3618a16aefc88e19a052836718e5\"></script>\n<script>\n    window.onload = function() {\n        // Build a system\n        const ui = SwaggerUIBundle({\n            dom_id: '#swagger-ui',\n            url: \"http://127.0.0.1:8000/docs/api-docs.json\",\n            operationsSorter: null,\n            configUrl: null,\n            validatorUrl: null,\n            oauth2RedirectUrl: \"http://127.0.0.1:8000/api/oauth2-callback\",\n\n            requestInterceptor: function(request) {\n                request.headers['X-CSRF-TOKEN'] = '';\n                return request;\n            },\n\n            presets: [\n                SwaggerUIBundle.presets.apis,\n                SwaggerUIStandalonePreset\n            ],\n\n            plugins: [\n                SwaggerUIBundle.plugins.DownloadUrl\n            ],\n\n            layout: \"StandaloneLayout\",\n            docExpansion : \"none\",\n            deepLinking: true,\n            filter: true,\n            persistAuthorization: \"false\",\n\n        })\n\n        window.ui = ui\n\n            }\n</script>\n</body>\n</html>\n"
+      tags:
+        - Endpoints
+      security: []
+  /api/oauth2-callback:
+    get:
+      summary: 'Display Oauth2 callback pages.'
+      operationId: displayOauth2CallbackPages
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "<!doctype html>\n<html lang=\"en-US\">\n<head>\n    <title>Swagger UI: OAuth2 Redirect</title>\n</head>\n<body>\n<script>\n    'use strict';\n    function run () {\n        var oauth2 = window.opener.swaggerUIRedirectOauth2;\n        var sentState = oauth2.state;\n        var redirectUrl = oauth2.redirectUrl;\n        var isValid, qp, arr;\n\n        if (/code|token|error/.test(window.location.hash)) {\n            qp = window.location.hash.substring(1).replace('?', '&');\n        } else {\n            qp = location.search.substring(1);\n        }\n\n        arr = qp.split(\"&\");\n        arr.forEach(function (v,i,_arr) { _arr[i] = '\"' + v.replace('=', '\":\"') + '\"';});\n        qp = qp ? JSON.parse('{' + arr.join() + '}',\n                function (key, value) {\n                    return key === \"\" ? value : decodeURIComponent(value);\n                }\n        ) : {};\n\n        isValid = qp.state === sentState;\n\n        if ((\n          oauth2.auth.schema.get(\"flow\") === \"accessCode\" ||\n          oauth2.auth.schema.get(\"flow\") === \"authorizationCode\" ||\n          oauth2.auth.schema.get(\"flow\") === \"authorization_code\"\n        ) && !oauth2.auth.code) {\n            if (!isValid) {\n                oauth2.errCb({\n                    authId: oauth2.auth.name,\n                    source: \"auth\",\n                    level: \"warning\",\n                    message: \"Authorization may be unsafe, passed state was changed in server. The passed state wasn't returned from auth server.\"\n                });\n            }\n\n            if (qp.code) {\n                delete oauth2.state;\n                oauth2.auth.code = qp.code;\n                oauth2.callback({auth: oauth2.auth, redirectUrl: redirectUrl});\n            } else {\n                let oauthErrorMsg;\n                if (qp.error) {\n                    oauthErrorMsg = \"[\"+qp.error+\"]: \" +\n                        (qp.error_description ? qp.error_description+ \". \" : \"no accessCode received from the server. \") +\n                        (qp.error_uri ? \"More info: \"+qp.error_uri : \"\");\n                }\n\n                oauth2.errCb({\n                    authId: oauth2.auth.name,\n                    source: \"auth\",\n                    level: \"error\",\n                    message: oauthErrorMsg || \"[Authorization failed]: no accessCode received from the server.\"\n                });\n            }\n        } else {\n            oauth2.callback({auth: oauth2.auth, token: qp, isValid: isValid, redirectUrl: redirectUrl});\n        }\n        window.close();\n    }\n\n    if (document.readyState !== 'loading') {\n        run();\n    } else {\n        document.addEventListener('DOMContentLoaded', function () {\n            run();\n        });\n    }\n</script>\n</body>\n</html>\n"
+      tags:
+        - Endpoints
+      security: []
+  /api/v2/subscribe:
+    post:
+      summary: ''
+      operationId: postApiV2Subscribe
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/v2/subscription:
+    get:
+      summary: ''
+      operationId: getApiV2Subscription
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+      security: []
+  /api/admin:
+    get:
+      summary: ''
+      operationId: getApiAdmin
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/s:
+    get:
+      summary: ''
+      operationId: getApiS
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Endpoints
+      security: []
+  /api/medicines:
+    get:
+      summary: 'showing the medicines or searching'
+      operationId: showingTheMedicinesOrSearching
+      description: ''
+      parameters:
+        -
+          in: query
+          name: "filter['type']"
+          description: 'filter medicine by type'
+          example: quisquam
+          required: false
+          schema:
+            type: string
+            description: 'filter medicine by type'
+            example: quisquam
+        -
+          in: query
+          name: "filter['trade_name']"
+          description: 'filter medicine by trade_name'
+          example: autem
+          required: false
+          schema:
+            type: string
+            description: 'filter medicine by trade_name'
+            example: autem
+        -
+          in: query
+          name: "filter['scientific_name']"
+          description: 'filter medicine by scientific_name'
+          example: fuga
+          required: false
+          schema:
+            type: string
+            description: 'filter medicine by scientific_name'
+            example: fuga
+        -
+          in: query
+          name: trashed
+          description: 'just pass it if you want to show trashed medicines'
+          example: quibusdam
+          required: false
+          schema:
+            type: string
+            description: 'just pass it if you want to show trashed medicines'
+            example: quibusdam
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 679
+                      type: 'Arden Hammes'
+                      scientific_name: 'Briana Senger'
+                      trade_name: 'Prof. Abbigail Hodkiewicz'
+                      price: 985
+                      quantity: 228
+                      manufacturer_id: 14
+                      expires_at: '2025-03-18 21:11:03'
+                      expires_at_human: '5 months from now'
+                      manufacturer:
+                        id: 14
+                        name: 'Tracey Stiedemann I'
+                        created_at: '2024-09-18T21:11:03.000000Z'
+                        updated_at: '2024-09-18T21:11:03.000000Z'
+                    -
+                      id: 1086
+                      type: 'Amani Kutch'
+                      scientific_name: 'Miss Pearline Roberts'
+                      trade_name: 'Estel Abbott'
+                      price: 524
+                      quantity: 506
+                      manufacturer_id: 1
+                      expires_at: '2025-03-18 21:11:04'
+                      expires_at_human: '5 months from now'
+                      manufacturer:
+                        id: 1
+                        name: 'Tracey Stiedemann I'
+                        created_at: '2024-09-18T21:11:03.000000Z'
+                        updated_at: '2024-09-18T21:11:03.000000Z'
+                  links:
+                    first: 'http://127.0.0.1:8000/api/medicines?page=1'
+                    last: 'http://127.0.0.1:8000/api/medicines?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/medicines?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://127.0.0.1:8000/api/medicines'
+                    per_page: 10
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 679
+                        type: 'Arden Hammes'
+                        scientific_name: 'Briana Senger'
+                        trade_name: 'Prof. Abbigail Hodkiewicz'
+                        price: 985
+                        quantity: 228
+                        manufacturer_id: 14
+                        expires_at: '2025-03-18 21:11:03'
+                        expires_at_human: '5 months from now'
+                        manufacturer:
+                          id: 14
+                          name: 'Tracey Stiedemann I'
+                          created_at: '2024-09-18T21:11:03.000000Z'
+                          updated_at: '2024-09-18T21:11:03.000000Z'
+                      -
+                        id: 1086
+                        type: 'Amani Kutch'
+                        scientific_name: 'Miss Pearline Roberts'
+                        trade_name: 'Estel Abbott'
+                        price: 524
+                        quantity: 506
+                        manufacturer_id: 1
+                        expires_at: '2025-03-18 21:11:04'
+                        expires_at_human: '5 months from now'
+                        manufacturer:
+                          id: 1
+                          name: 'Tracey Stiedemann I'
+                          created_at: '2024-09-18T21:11:03.000000Z'
+                          updated_at: '2024-09-18T21:11:03.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 679
+                        type:
+                          type: string
+                          example: 'Arden Hammes'
+                        scientific_name:
+                          type: string
+                          example: 'Briana Senger'
+                        trade_name:
+                          type: string
+                          example: 'Prof. Abbigail Hodkiewicz'
+                        price:
+                          type: integer
+                          example: 985
+                        quantity:
+                          type: integer
+                          example: 228
+                        manufacturer_id:
+                          type: integer
+                          example: 14
+                        expires_at:
+                          type: string
+                          example: '2025-03-18 21:11:03'
+                        expires_at_human:
+                          type: string
+                          example: '5 months from now'
+                        manufacturer:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 14
+                            name:
+                              type: string
+                              example: 'Tracey Stiedemann I'
+                            created_at:
+                              type: string
+                              example: '2024-09-18T21:11:03.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2024-09-18T21:11:03.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/medicines?page=1'
+                      last:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/medicines?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/medicines?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/medicines'
+                      per_page:
+                        type: integer
+                        example: 10
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Medicine
+    post:
+      summary: 'Store new medicine'
+      operationId: storeNewMedicine
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  medicine:
+                    scientific_name: '1'
+                    trade_name: '1'
+                    type: '1'
+                    manufacturer_id: '100'
+                    quantity: '1'
+                    price: '11'
+                    expires_at: '2024-10-20T19:00:27.554469Z'
+                    creator_id: 1
+                    updated_at: '2024-09-19T19:00:27.000000Z'
+                    created_at: '2024-09-19T19:00:27.000000Z'
+                    id: 10002
+                properties:
+                  medicine:
+                    type: object
+                    properties:
+                      scientific_name:
+                        type: string
+                        example: '1'
+                      trade_name:
+                        type: string
+                        example: '1'
+                      type:
+                        type: string
+                        example: '1'
+                      manufacturer_id:
+                        type: string
+                        example: '100'
+                      quantity:
+                        type: string
+                        example: '1'
+                      price:
+                        type: string
+                        example: '11'
+                      expires_at:
+                        type: string
+                        example: '2024-10-20T19:00:27.554469Z'
+                      creator_id:
+                        type: integer
+                        example: 1
+                      updated_at:
+                        type: string
+                        example: '2024-09-19T19:00:27.000000Z'
+                      created_at:
+                        type: string
+                        example: '2024-09-19T19:00:27.000000Z'
+                      id:
+                        type: integer
+                        example: 10002
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right roles.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right roles.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The scientific name field is required. (and 8 more errors)'
+                  errors:
+                    scientific_name:
+                      - 'The scientific name field is required.'
+                    trade_name:
+                      - 'The trade name field is required.'
+                    type:
+                      - 'The type field is required.'
+                    manufacturer_id:
+                      - 'The selected manufacturer id is invalid.'
+                    quantity:
+                      - 'The quantity field is required.'
+                    price:
+                      - 'The price field is required.'
+                    days:
+                      - 'The days field is required.'
+                    months:
+                      - 'The months field is required.'
+                    years:
+                      - 'The years field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The scientific name field is required. (and 8 more errors)'
+                  errors:
+                    type: object
+                    properties:
+                      scientific_name:
+                        type: array
+                        example:
+                          - 'The scientific name field is required.'
+                        items:
+                          type: string
+                      trade_name:
+                        type: array
+                        example:
+                          - 'The trade name field is required.'
+                        items:
+                          type: string
+                      type:
+                        type: array
+                        example:
+                          - 'The type field is required.'
+                        items:
+                          type: string
+                      manufacturer_id:
+                        type: array
+                        example:
+                          - 'The selected manufacturer id is invalid.'
+                        items:
+                          type: string
+                      quantity:
+                        type: array
+                        example:
+                          - 'The quantity field is required.'
+                        items:
+                          type: string
+                      price:
+                        type: array
+                        example:
+                          - 'The price field is required.'
+                        items:
+                          type: string
+                      days:
+                        type: array
+                        example:
+                          - 'The days field is required.'
+                        items:
+                          type: string
+                      months:
+                        type: array
+                        example:
+                          - 'The months field is required.'
+                        items:
+                          type: string
+                      years:
+                        type: array
+                        example:
+                          - 'The years field is required.'
+                        items:
+                          type: string
+      tags:
+        - admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scientific_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: ki
+                trade_name:
+                  type: string
+                  description: 'Must not be greater than 70 characters.'
+                  example: mfbzg
+                type:
+                  type: string
+                  description: 'Must not be greater than 70 characters.'
+                  example: pfbvgyguxvmw
+                manufacturer_id:
+                  type: string
+                  description: ''
+                  example: et
+                quantity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 17
+                price:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 57
+                days:
+                  type: integer
+                  description: ''
+                  example: 10
+                months:
+                  type: integer
+                  description: ''
+                  example: 9
+                years:
+                  type: integer
+                  description: ''
+                  example: 16
+              required:
+                - scientific_name
+                - trade_name
+                - type
+                - manufacturer_id
+                - quantity
+                - price
+                - days
+                - months
+                - years
+  '/api/medicines/{id}':
+    get:
+      summary: 'Show a specific medicine'
+      operationId: showASpecificMedicine
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n{\n\"medicine\": {\n\"id\": 2,\n\"type\": \"Dr. Glenna Mann Jr.\",\n\"scientific_name\": \"Jabari D'Amore PhD\",\n\"trade_name\": \"Daron Dickens\",\n\"price\": 731,\n\"quantity\": 661,\n\"manufacturer_id\": 1,\n\"expires_at\": \"2025-03-24 16:05:08\",\n\"expires_at_human\": \"5 months from now\",\n\"manufacturer\": {\n\"id\": 1,\n\"name\": \"Johathan Gaylord III\",\n\"created_at\": \"2024-09-24T16:05:08.000000Z\",\n\"updated_at\": \"2024-09-24T16:05:08.000000Z\"\n}\n}\n}\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n \"message\" => \"object not found \"\n}"
+      tags:
+        - Medicine
+    put:
+      summary: 'updating a specific medicine'
+      operationId: updatingASpecificMedicine
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  medicine:
+                    scientific_name: '1'
+                    trade_name: '1'
+                    type: '1'
+                    manufacturer_id: '100'
+                    quantity: '1'
+                    price: '11'
+                    expires_at: '2024-10-20T19:00:27.554469Z'
+                    creator_id: 1
+                    updated_at: '2024-09-19T19:00:27.000000Z'
+                    created_at: '2024-09-19T19:00:27.000000Z'
+                    id: 10002
+                properties:
+                  medicine:
+                    type: object
+                    properties:
+                      scientific_name:
+                        type: string
+                        example: '1'
+                      trade_name:
+                        type: string
+                        example: '1'
+                      type:
+                        type: string
+                        example: '1'
+                      manufacturer_id:
+                        type: string
+                        example: '100'
+                      quantity:
+                        type: string
+                        example: '1'
+                      price:
+                        type: string
+                        example: '11'
+                      expires_at:
+                        type: string
+                        example: '2024-10-20T19:00:27.554469Z'
+                      creator_id:
+                        type: integer
+                        example: 1
+                      updated_at:
+                        type: string
+                        example: '2024-09-19T19:00:27.000000Z'
+                      created_at:
+                        type: string
+                        example: '2024-09-19T19:00:27.000000Z'
+                      id:
+                        type: integer
+                        example: 10002
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right roles.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right roles.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The scientific name field is required. (and 8 more errors)'
+                  errors:
+                    scientific_name:
+                      - 'The scientific name field is required.'
+                    trade_name:
+                      - 'The trade name field is required.'
+                    type:
+                      - 'The type field is required.'
+                    manufacturer_id:
+                      - 'The selected manufacturer id is invalid.'
+                    quantity:
+                      - 'The quantity field is required.'
+                    price:
+                      - 'The price field is required.'
+                    days:
+                      - 'The days field is required.'
+                    months:
+                      - 'The months field is required.'
+                    years:
+                      - 'The years field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The scientific name field is required. (and 8 more errors)'
+                  errors:
+                    type: object
+                    properties:
+                      scientific_name:
+                        type: array
+                        example:
+                          - 'The scientific name field is required.'
+                        items:
+                          type: string
+                      trade_name:
+                        type: array
+                        example:
+                          - 'The trade name field is required.'
+                        items:
+                          type: string
+                      type:
+                        type: array
+                        example:
+                          - 'The type field is required.'
+                        items:
+                          type: string
+                      manufacturer_id:
+                        type: array
+                        example:
+                          - 'The selected manufacturer id is invalid.'
+                        items:
+                          type: string
+                      quantity:
+                        type: array
+                        example:
+                          - 'The quantity field is required.'
+                        items:
+                          type: string
+                      price:
+                        type: array
+                        example:
+                          - 'The price field is required.'
+                        items:
+                          type: string
+                      days:
+                        type: array
+                        example:
+                          - 'The days field is required.'
+                        items:
+                          type: string
+                      months:
+                        type: array
+                        example:
+                          - 'The months field is required.'
+                        items:
+                          type: string
+                      years:
+                        type: array
+                        example:
+                          - 'The years field is required.'
+                        items:
+                          type: string
+      tags:
+        - admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scientific_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: e
+                trade_name:
+                  type: string
+                  description: 'Must not be greater than 70 characters.'
+                  example: luicmbhbvmel
+                type:
+                  type: string
+                  description: 'Must not be greater than 70 characters.'
+                  example: lj
+                manufacturer_id:
+                  type: string
+                  description: ''
+                  example: molestiae
+                quantity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 48
+                price:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 35
+                days:
+                  type: integer
+                  description: ''
+                  example: 8
+                months:
+                  type: integer
+                  description: ''
+                  example: 11
+                years:
+                  type: integer
+                  description: ''
+                  example: 2
+              required:
+                - scientific_name
+                - trade_name
+                - type
+                - manufacturer_id
+                - quantity
+                - price
+                - days
+                - months
+                - years
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the medicine.'
+        example: 2
+        required: true
+        schema:
+          type: integer
+  /api/medicines/search:
+    post:
+      summary: 'Searching in medicines'
+      operationId: searchingInMedicines
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'entre what you want to search for'
+          example: ab
+          required: false
+          schema:
+            type: string
+            description: 'entre what you want to search for'
+            example: ab
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n{\n\"medicine\": {\n\"id\": 2,\n\"type\": \"Dr. Glenna Mann Jr.\",\n\"scientific_name\": \"Jabari D'Amore PhD\",\n\"trade_name\": \"Daron Dickens\",\n\"price\": 731,\n\"quantity\": 661,\n\"manufacturer_id\": 1,\n\"expires_at\": \"2025-03-24 16:05:08\",\n\"expires_at_human\": \"5 months from now\",\n\"manufacturer\": {\n\"id\": 1,\n\"name\": \"Johathan Gaylord III\",\n\"created_at\": \"2024-09-24T16:05:08.000000Z\",\n\"updated_at\": \"2024-09-24T16:05:08.000000Z\"\n}\n}\n}\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Medicine
+  /api/orders:
+    post:
+      summary: 'Make a new Order'
+      operationId: makeANewOrder
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order placed successfully'
+                  order:
+                    total_price: 23432
+                    status: repairing
+                    payment_status: unpaid
+                    orderer_id: 6
+                    updated_at: '2024-09-25T12:29:54.000000Z'
+                    created_at: '2024-09-25 12:09:54'
+                    id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Order placed successfully'
+                  order:
+                    type: object
+                    properties:
+                      total_price:
+                        type: integer
+                        example: 23432
+                      status:
+                        type: string
+                        example: repairing
+                      payment_status:
+                        type: string
+                        example: unpaid
+                      orderer_id:
+                        type: integer
+                        example: 6
+                      updated_at:
+                        type: string
+                        example: '2024-09-25T12:29:54.000000Z'
+                      created_at:
+                        type: string
+                        example: '2024-09-25 12:09:54'
+                      id:
+                        type: integer
+                        example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right role .'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right role .'
+        422:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: string
+                    example: "if one of the medicines not found\n{\n\"message\": \"The selected medicines.0.id is invalid.\",\n\"errors\": {\n\"medicines.0.id\": [\n\"The selected medicines.0.id is invalid.\"\n]\n}\n}"
+                  -
+                    description: ''
+                    type: string
+                    example: "if no medicines passed\n{\n\"message\": \"The medicines field is required.\",\n\"errors\": {\n\"medicines\": [\n\"The medicines field is required.\"\n]\n}\n}"
+      tags:
+        - Order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                medicines:
+                  type: array
+                  description: ''
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ''
+                        example: provident
+                      quantity:
+                        type: integer
+                        description: 'Must be at least 1.'
+                        example: 81
+                    required:
+                      - id
+                      - quantity
+              required:
+                - medicines
+    get:
+      summary: "Showing the user 's orders and if he is admin showing all orders"
+      operationId: showingTheUsersOrdersAndIfHeIsAdminShowingAllOrders
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 1
+                      orderer_id: 6
+                      total_price: 23432
+                      status: repairing
+                      payment_status: unpaid
+                      created_at: '2024-09-25 12:09:54'
+                      updated_at: '2024-09-25T12:29:54.000000Z'
+                  links:
+                    first: 'http://127.0.0.1:8000/api/orders?page=1'
+                    last: 'http://127.0.0.1:8000/api/orders?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/orders?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://127.0.0.1:8000/api/orders'
+                    per_page: 15
+                    to: 1
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        orderer_id: 6
+                        total_price: 23432
+                        status: repairing
+                        payment_status: unpaid
+                        created_at: '2024-09-25 12:09:54'
+                        updated_at: '2024-09-25T12:29:54.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        orderer_id:
+                          type: integer
+                          example: 6
+                        total_price:
+                          type: integer
+                          example: 23432
+                        status:
+                          type: string
+                          example: repairing
+                        payment_status:
+                          type: string
+                          example: unpaid
+                        created_at:
+                          type: string
+                          example: '2024-09-25 12:09:54'
+                        updated_at:
+                          type: string
+                          example: '2024-09-25T12:29:54.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/orders?page=1'
+                      last:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/orders?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/orders?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/orders'
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Order
+  '/api/orders/{id}':
+    put:
+      summary: 'update  a status for a specific  Order'
+      operationId: updateAStatusForASpecificOrder
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right role .'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right role .'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: ' not found.'
+                properties:
+                  message:
+                    type: string
+                    example: ' not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The status field must be between 0 and 2. (and 1 more error)'
+                  errors:
+                    status:
+                      - 'The status field must be between 0 and 2.'
+                    payment_status:
+                      - 'The payment status field must be true or false.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The status field must be between 0 and 2. (and 1 more error)'
+                  errors:
+                    type: object
+                    properties:
+                      status:
+                        type: array
+                        example:
+                          - 'The status field must be between 0 and 2.'
+                        items:
+                          type: string
+                      payment_status:
+                        type: array
+                        example:
+                          - 'The payment status field must be true or false.'
+                        items:
+                          type: string
+      tags:
+        - Order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 'Must be between 0 and 2.'
+                  example: 0
+                payment_status:
+                  type: boolean
+                  description: ''
+                  example: true
+              required:
+                - status
+                - payment_status
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/medicines/{medicine_id}':
+    delete:
+      summary: 'moving  a specific medicine to trash'
+      operationId: movingASpecificMedicineToTrash
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'medicine deleted successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'medicine deleted successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right roles.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right roles.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: ' not found.'
+                properties:
+                  message:
+                    type: string
+                    example: ' not found.'
+      tags:
+        - admin
+    parameters:
+      -
+        in: path
+        name: medicine_id
+        description: 'The ID of the medicine.'
+        example: 2
+        required: true
+        schema:
+          type: integer
+  '/api/medicines/{medicine}/restore':
+    post:
+      summary: 'restore a specific medicine from trash'
+      operationId: restoreASpecificMedicineFromTrash
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n'message' => 'medicine restored successfully'\n}"
+        400:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n    'message' => 'medicine not restored because it is already restored'\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right roles.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right roles.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: ' not found.'
+                properties:
+                  message:
+                    type: string
+                    example: ' not found.'
+      tags:
+        - admin
+    parameters:
+      -
+        in: path
+        name: medicine
+        description: 'The medicine.'
+        example: 2
+        required: true
+        schema:
+          type: integer
+  '/api/medicines/{medicine}/force_delete':
+    delete:
+      summary: 'delete a specific medicine forever from trash'
+      operationId: deleteASpecificMedicineForeverFromTrash
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n'message' => 'medicine deleted successfully'\n}"
+        400:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n    'message' => 'medicine cant be deleted'\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User does not have the right roles.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User does not have the right roles.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: ' not found.'
+                properties:
+                  message:
+                    type: string
+                    example: ' not found.'
+      tags:
+        - admin
+    parameters:
+      -
+        in: path
+        name: medicine
+        description: 'The medicine.'
+        example: 2
+        required: true
+        schema:
+          type: integer
+tags:
+  -
+    name: Authorization
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: Medicine
+    description: ''
+  -
+    name: Order
+    description: ''
+  -
+    name: admin
+    description: ''
