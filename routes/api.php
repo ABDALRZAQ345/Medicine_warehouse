@@ -5,14 +5,12 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\MailVerificationController;
 use App\Http\Controllers\Medicine\MedicineController;
+use App\Http\Controllers\Notification\NotificationsController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\SocialiteController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale'
-    // 'api_password'
-])->group(function () {
+Route::middleware(['throttle:api', 'locale'])->group(function () {
 
 
 
@@ -28,11 +26,14 @@ Route::middleware(['throttle:api', 'locale'
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::group([], function () {
+
+            Route::get('/notifications',[NotificationsController::class,'index'])->name('notifications.index');
             Route::put('/change_password', [ChangePasswordController::class, 'changePassword'])->name('change_password');
             Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
             Route::put('/update', [AuthController::class, 'update'])->name('update');
             Route::delete('/delete_account', [AuthController::class, 'delete'])->name('delete-account');
             Route::post('/resend_email_verification_link', [MailVerificationController::class, 'resend'])->middleware('throttle:email_verification')->name('resend-email-verification-link');
+
         });
 
 
@@ -48,8 +49,16 @@ Route::middleware(['throttle:api', 'locale'
             Route::post('/orders', [OrderController::class, 'store'])->middleware('role:user')->name('orders.store');
             Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
             Route::put('/orders/{order}', [OrderController::class, 'update'])->middleware('role:admin')->name('orders.update');
+            Route::post('/get_order_invoice/{order}',[OrderController::class,'get_order_invoice'])->name('get_order_invoice');
         });
-            Route::get('/admin',AdminController::class)->middleware('role:admin')->name('admin');
+
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/admin_panel',[AdminController::class,'index'])->name('admin');
+            Route::post('/change_role/{user}',[AdminController::class,'change_role'])->middleware('permission:chang_role_permission')->name('change_role');
+
+        });
+
+
 
     });
 

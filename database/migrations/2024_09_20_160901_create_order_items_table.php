@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Medicine::class);
             $table->foreignIdFor(\App\Models\Order::class);
             $table->unsignedInteger('quantity');
+            $table->float('price');
+            $table->string('scientific_name');
+            $table->string('trade_name');
             $table->timestamps();
         });
     }

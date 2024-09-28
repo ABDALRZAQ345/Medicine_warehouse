@@ -11,6 +11,7 @@ use Arr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -105,11 +106,16 @@ class MedicineController extends Controller
     {
         $medicines = QueryBuilder::for(Medicine::class)
             ->allowedFilters([
-                'type', 'scientific_name', 'trade_name'
+                'type', 'scientific_name', 'trade_name',
             ])
-            ->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at'])
-            ->where('expires_at', '>', now())
+            ->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at','discount','photo'])
             ->with('manufacturer');
+
+        if($request->has('expired')){
+            $medicines= $medicines->where('expires_at', '<', now()) ;
+        }else {
+            $medicines= $medicines->where('expires_at', '>', now()) ;
+        }
 
         if ($request->has('trashed')) {
             $medicines = $medicines->onlyTrashed()->paginate();
@@ -194,10 +200,23 @@ class MedicineController extends Controller
         $validated = $request->validated();
         $validated['expires_at'] = now()->addDays($validated['days'] + $validated['months'] * 30 + $validated['years'] * 365);
         unset($validated['days'], $validated['months'], $validated['years']);
-        $medicine = Auth::user()->medicines()->create($validated);
 
+        if ($request->photo !=null) {
+            $filename = $request->photo->getClientOriginalName();
+            $filePath = 'photos/' . $filename;
+            if (!Storage::disk('public')->exists($filePath)) {
+                $filePath = $request->photo->store('photos', 'public');
+            }
+            $validated['photo'] = $filePath;
+        } else {
+            $validated['photo'] = 'photos/Untitled.jpeg';
+        }
+
+        $medicine = Auth::user()->medicines()->create($validated);
+        $medicine->load('manufacturer');
         return response()->json([
-            'medicine' => $medicine
+            'medicine' => new MedicineResource($medicine),
+
         ]);
     }
 
@@ -245,7 +264,8 @@ class MedicineController extends Controller
     {
         $medicine = Medicine::where('id', $medicine->id)->with('manufacturer')->first();
         return response()->json([
-            'medicine' => new MedicineResource($medicine)
+            'medicine' => new MedicineResource($medicine),
+
         ]);
     }
 

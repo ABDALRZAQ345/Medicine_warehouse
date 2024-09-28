@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => bcrypt('secretsecret'),
         ])->assignRole('admin');
-
+        $chang_role_permission=Permission::create(['name' => 'chang_role_permission']);
+        $local_admin->givePermissionTo($chang_role_permission);
     }
 }

@@ -92,7 +92,14 @@ class AuthController extends Controller
      */
     public function delete()
     {
-        Auth::user()->tokens()->delete();
+        $user = Auth::user();
+        if($user->orders()->where('payment_status','=','0')->count() > 0){
+            return response()->json([
+                'message' => 'account cant be deleted because  you have  unpaid orders please complete payment first
+                 \n if you think that you have paid all your orders please contact with us'
+            ],400);
+        }
+        $user->tokens()->delete();
         User::find(Auth::id())->delete();
         return response()->json(['message' => 'account deleted successfully']);
     }

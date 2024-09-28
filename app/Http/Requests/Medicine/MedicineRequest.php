@@ -31,6 +31,8 @@ class MedicineRequest extends FormRequest
             'days' => ['required','integer'],
             'months' => ['required','integer'],
             'years' => ['required','integer'],
+            'discount' => ['required', 'integer','min:0','max:100'],
+            'photo' => ['nullable','image','mimes:jpg,png,jpeg','max:3072'],
         ];
     }
 }

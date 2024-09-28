@@ -7,6 +7,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Medicine;
 use App\Models\Order;
 use Illuminate\Http\Request;
+
 /**
  * @group Order
  */
@@ -63,7 +64,8 @@ class OrderController extends Controller
      *
      */
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $validated = $request->validate([
             'medicines' => 'required|array',
@@ -75,25 +77,28 @@ class OrderController extends Controller
         $orderItems = [];
 
         foreach ($validated['medicines'] as $medicineData) {
-            $medicine = Medicine::find($medicineData['id']);
+            $medicine = Medicine::findOrFail($medicineData['id']);
             $quantity = $medicineData['quantity'];
 
             if ($quantity > $medicine->quantity) {
                 return response()->json(['error' => 'Not enough medicines available for medicine with id  ' . $medicineData['id']], 400);
             }
 
-            $totalPrice += $medicine->price * $quantity;
+            $totalPrice += ($medicine->price - (($medicine->discount * $medicine->price) / 100.0)) * $quantity;
 
             $orderItems[] = [
                 'medicine_id' => $medicine->id,
                 'quantity' => $quantity,
+                'price' => $medicine->price,
+                'scientific_name' => $medicine->scientific_name,
+                'trade_name' => $medicine->trade_name,
             ];
 
 
         }
         ///
         foreach ($validated['medicines'] as $medicineData) {
-            $medicine=Medicine::find($medicineData['id']);
+            $medicine = Medicine::find($medicineData['id']);
             $medicine->quantity -= $medicineData['quantity'];
             $medicine->save();
         }
@@ -111,17 +116,17 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Order placed successfully',
-            'order' => new OrderResource($order)
+            'order' => new OrderResource($order),
+            'download_word_invoice_url' => "http://127.0.0.1:8000/api/get_order_invoice/" .$order->id
         ], 201);
     }
 
     /**
      * Showing the user 's orders and if he is admin showing all orders
      *
-
      * @authenticated
      * @header Authorization Bearer {access_token}
-     *
+     * @queryParam payment_status 0 for unpaid and 1 for paid
      * @response  401 {
      * "message": "Unauthenticated."
      * }
@@ -174,22 +179,17 @@ class OrderController extends Controller
      *
      */
 
-    public function index(){
+    public function index(Request $request)
+    {
         $user = \Auth::user();
-        if($user->hasRole('user')){
+        $orders = $user->hasRole('admin') ? Order::query() : $user->orders();
 
-            $orders = $user->orders()->paginate();
-            return OrderResource::collection($orders);
-        }
-        else if($user->hasRole('admin')){
-
-            $orders = Order::paginate();
-            return OrderResource::collection($orders);
-
-        }
-      return response()->json(['error' => 'Unauthorized'], 401);
+        $filters = $request->only(['payment_status', 'status']);
+        $orders = $orders->filter($filters)->paginate();
+        return OrderResource::collection($orders);
 
     }
+
     /**
      * update  a status for a specific  Order
      *
@@ -223,19 +223,29 @@ class OrderController extends Controller
      *
      */
 
-    public function update(Request $request,  Order $order)
+    public function update(Request $request, Order $order)
     {
         $request->validate([
-            'status' => ['required',"integer",'between:0,2'],
-            'payment_status' => ['required','boolean'],
+            'status' => ['required', "integer", 'between:0,2'],
+            'payment_status' => ['required', 'boolean'],
         ]);
-        $order->status  = $request->status;
+        $order->status = $request->status;
         $order->payment_status = $request->payment_status;
         $order->save();
         return response()->json([
-           'message' => 'Order status updated successfully',
+            'message' => 'Order status updated successfully',
             'order' => new OrderResource($order)
         ]);
+    }
+
+   public function get_order_invoice(\App\Services\WordServices $wordServices,$order) {
+
+        $user = \Auth::user();
+       $order=$user->orders()->findOrFail($order);
+        $filePath = $wordServices->generateInvoice($order,$user);
+
+        return response()->download($filePath);
+
     }
 
 }
