@@ -12,16 +12,16 @@ class OrderResource extends JsonResource
 {
 
 
-    public function scopeFilter(Builder $query, $filters)
-    {
-        foreach ($filters as $key => $value) {
-            if (!is_null($value)) {
-                $query->where($key, $value);
-            }
-        }
-
-        return $query;
-    }
+//    public function scopeFilter(Builder $query, $filters)
+//    {
+//        foreach ($filters as $key => $value) {
+//            if (!is_null($value)) {
+//                $query->where($key, $value);
+//            }
+//        }
+//
+//        return $query;
+//    }
 
     /**
      * Transform the resource into an array.

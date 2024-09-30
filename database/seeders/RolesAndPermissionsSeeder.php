@@ -20,7 +20,10 @@ class RolesAndPermissionsSeeder extends Seeder
             Role::create([
                 'name' => $Role,
             ]);
+
         }
+
+
 
 
         $local_admin=User::create([

@@ -2,25 +2,24 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
+use App\Notifications\OrderStatusUpdatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class Fresh implements ShouldQueue
+class SendOrderStatusUpdatedNotification implements ShouldQueue
 {
-    use Queueable,Dispatchable, InteractsWithQueue, SerializesModels;
+    use Queueable;
 
     /**
      * Create a new job instance.
      */
-    protected  $number;
-    public function __construct($number)
+    protected $order;
+    public function __construct($order)
     {
-        //
-        $this->number = $number;
+        $this->order = $order;
     }
 
     /**
@@ -28,7 +27,6 @@ class Fresh implements ShouldQueue
      */
     public function handle(): void
     {
-        User::take($this->number)->delete();
-        //
+        \Notification::send($this->order->user, new OrderStatusUpdatedNotification($this->order));
     }
 }

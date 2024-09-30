@@ -75,8 +75,7 @@ class WordServices
 
         // إنشاء ملف وورد
         $fileName = 'order'.$order->id.'docx';
-        $filePath = storage_path($fileName);
-
+        $filePath = storage_path('app/private/orders/order'.$order->id.'.docx');
         // حفظ المستند كملف وورد
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filePath);

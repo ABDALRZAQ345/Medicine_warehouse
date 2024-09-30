@@ -2,20 +2,40 @@
 
 namespace App\Models;
 
-use http\Env\Response;
-use Illuminate\Auth\Access\AuthorizationException;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
-use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Builder;
 
 class Medicine extends Model
 {
     use HasFactory,Searchable,softDeletes;
 
+
+    public function scopeFilterExpiredAndTrashed(Builder $query, $request){
+
+        if(Auth::user()->hasRole('admin')){
+            if ($request->has('expired')) {
+                $query->where('expires_at', '<', now());
+            } else {
+                $query->where('expires_at', '>', now());
+            }
+
+            if ($request->has('trashed')) {
+                $query->onlyTrashed();
+            } else {
+                $query->withoutTrashed();
+            }
+        }
+        else {
+            $query->where('expires_at', '>', now());
+        }
+
+    }
     protected $guarded=['id'];
 
     protected static function boot()
@@ -50,4 +70,6 @@ class Medicine extends Model
             // You can include other fields as necessary
         ];
     }
+
+
 }

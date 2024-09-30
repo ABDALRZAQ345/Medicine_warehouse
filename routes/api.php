@@ -9,6 +9,8 @@ use App\Http\Controllers\Notification\NotificationsController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
+use Stripe\StripeClient;
+
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
 
@@ -64,8 +66,8 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
 
 
-
-
+//Route::get('/pay',[\App\Http\Controllers\Stripe::class,'pay'])->name('pay');
+//
 //    Route::get('/subscription', function () {
 //        $user = Auth::user(); // Assuming the user is authenticated
 //
@@ -80,7 +82,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 //    });
 //
 //    Route::post('/create-checkout-session',[\App\Http\Controllers\Stripe::class,'pay']);
-//
+
 //    Route::get('/test', function () {
 //
 //        $user = Auth::user();

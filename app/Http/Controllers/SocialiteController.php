@@ -4,15 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthRequests\LoginRequest;
-use App\Http\Requests\AuthRequests\SignupRequest;
-use App\Http\Resources\UserResource;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class SocialiteController extends Controller
 {

@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Jobs\SendNewOrderNotification;
+use App\Jobs\SendOrderStatusUpdatedNotification;
 use App\Models\Medicine;
 use App\Models\Order;
+use App\Services\OrderService;
+use App\Services\WordServices;
 use Illuminate\Http\Request;
 
 /**
@@ -13,7 +18,11 @@ use Illuminate\Http\Request;
  */
 class OrderController extends Controller
 {
+    protected OrderService $orderService ;
 
+    public function __construct(OrderService $orderService){
+        $this->orderService = $orderService;
+    }
     /**
      * Make a new Order
      *
@@ -64,61 +73,28 @@ class OrderController extends Controller
      *
      */
 
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
 
-        $validated = $request->validate([
-            'medicines' => 'required|array',
-            'medicines.*.id' => 'required|exists:medicines,id',
-            'medicines.*.quantity' => 'required|integer|min:1',
-        ]);
+       $validated=$request->validated();
 
-        $totalPrice = 0;
-        $orderItems = [];
-
-        foreach ($validated['medicines'] as $medicineData) {
-            $medicine = Medicine::findOrFail($medicineData['id']);
-            $quantity = $medicineData['quantity'];
-
-            if ($quantity > $medicine->quantity) {
-                return response()->json(['error' => 'Not enough medicines available for medicine with id  ' . $medicineData['id']], 400);
-            }
-
-            $totalPrice += ($medicine->price - (($medicine->discount * $medicine->price) / 100.0)) * $quantity;
-
-            $orderItems[] = [
-                'medicine_id' => $medicine->id,
-                'quantity' => $quantity,
-                'price' => $medicine->price,
-                'scientific_name' => $medicine->scientific_name,
-                'trade_name' => $medicine->trade_name,
-            ];
-
-
-        }
-        ///
-        foreach ($validated['medicines'] as $medicineData) {
-            $medicine = Medicine::find($medicineData['id']);
-            $medicine->quantity -= $medicineData['quantity'];
-            $medicine->save();
+        try {
+            $order=$this->orderService->store($validated);
+        }catch (\Exception $e){
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 400);
         }
 
-        $order = \Auth::user()->orders()->create([
-            'total_price' => $totalPrice,
-            'status' => 0,
-            'payment_status' => 0,
-        ]);
 
-
-        foreach ($orderItems as $orderItem) {
-            $order->items()->create($orderItem);
-        }
+        dispatch(new SendNewOrderNotification($order));
 
         return response()->json([
             'message' => 'Order placed successfully',
             'order' => new OrderResource($order),
-            'download_word_invoice_url' => "http://127.0.0.1:8000/api/get_order_invoice/" .$order->id
+            'download_word_invoice_url' => env('APP_URL') . "/api/get_order_invoice/" .$order->id
         ], 201);
+
     }
 
     /**
@@ -225,25 +201,26 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
-        $request->validate([
+        $validated=$request->validate([
             'status' => ['required', "integer", 'between:0,2'],
             'payment_status' => ['required', 'boolean'],
         ]);
-        $order->status = $request->status;
-        $order->payment_status = $request->payment_status;
-        $order->save();
+
+        $order->update($validated);
+
+        dispatch(new SendOrderStatusUpdatedNotification($order));
+
         return response()->json([
             'message' => 'Order status updated successfully',
             'order' => new OrderResource($order)
         ]);
     }
 
-   public function get_order_invoice(\App\Services\WordServices $wordServices,$order) {
+   public function get_order_invoice(WordServices $wordServices,$order) {
 
         $user = \Auth::user();
        $order=$user->orders()->findOrFail($order);
         $filePath = $wordServices->generateInvoice($order,$user);
-
         return response()->download($filePath);
 
     }

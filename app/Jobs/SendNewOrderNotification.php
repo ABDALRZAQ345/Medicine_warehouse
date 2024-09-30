@@ -2,28 +2,28 @@
 
 namespace App\Jobs;
 
-use App\Models\Medicine;
 use App\Models\User;
-use App\Notifications\ExpiryAlertNotification;
+use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderStatusUpdatedNotification;
-use App\Notifications\QuantityAlertNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Notification;
 
-class SendExpiryNotifications implements ShouldQueue
+class SendNewOrderNotification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    protected $order;
+    public function __construct($order)
     {
         //
+        $this->order=$order;
     }
 
     /**
@@ -31,12 +31,7 @@ class SendExpiryNotifications implements ShouldQueue
      */
     public function handle(): void
     {
-        $medicines = Medicine::where('expires_at', '<', now()->addDays(30))
-            ->where('expires_at', '>', now())
-            ->get();
         $admins = User::whereRelation('roles', 'name', '=', 'admin')->get();
-        foreach ($medicines as $medicine) {
-            Notification::send($admins,new ExpiryAlertNotification($medicine));
-        }
+        Notification::send($admins, new NewOrderNotification($this->order));
     }
 }

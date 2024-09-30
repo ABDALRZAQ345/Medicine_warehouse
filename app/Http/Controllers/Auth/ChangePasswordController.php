@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\PasswordVerificationToken;
+use App\Http\Requests\AuthRequests\ChangePasswordRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Lcobucci\JWT\Exception;
 
 /**
- *  @subgroupDescription  forget_password
+ * @subgroupDescription  forget_password
  * @group Authorization
  */
 class ChangePasswordController extends Controller
@@ -22,30 +23,27 @@ class ChangePasswordController extends Controller
      * @header  Authorization Bearer access_token
      * @authenticated
      */
-    public function ForgetPassword(Request $request){
+    public function ForgetPassword(Request $request)
+    {
 
 
-            $request->validate([
-                'email' => ['required','email:dns','exists:users,email'],
-            ]);
-
-
-
-
+        $request->validate([
+            'email' => ['required', 'email:dns', 'exists:users,email'],
+        ]);
 
         try {
             $status = Password::sendResetLink(
                 $request->only('email')
             );
-        }
-        catch (Exception $e){
-            return  response()->json(['error' => 'some thing went wrong check your internet and try again ']) ;
+        } catch (Exception $e) {
+            return response()->json(['error' => 'some thing went wrong check your internet and try again ']);
         }
 
 
         return response()->json(__($status));
 
     }
+
     public function Password_reset(string $token)
     {
 
@@ -86,27 +84,24 @@ class ChangePasswordController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @authenticated
      */
-    public function changePassword(Request $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
 
-        $request->validate([
-            'old_password' => 'required',
-            'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required|min:8',
-        ]);
-        $user = \Auth::user();
-            if(Hash::check($request->old_password, $user->password)){
-                $user->password = Hash::make($request->password);
-                $user->save();
-                return response()->json([
-                    'message' => 'Your password has been changed'
-                ]);
-            }
-            else {
-                return response()->json([
-                    'message' => 'Your old password is incorrect'
-                ],401);
-            }
+        $request->validated();
+
+        $user = Auth::user();
+
+        if (Hash::check($request->old_password, $user->password)) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return response()->json([
+                'message' => 'Your password has been changed'
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Your old password is incorrect'
+            ], 401);
+        }
 
     }
 }

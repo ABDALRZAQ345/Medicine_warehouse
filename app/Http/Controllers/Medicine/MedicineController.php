@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Medicine;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Medicine\MedicineRequest;
-use App\Http\Resources\MedicineCollection;
 use App\Http\Resources\MedicineResource;
 use App\Models\Medicine;
 use Arr;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -108,20 +106,11 @@ class MedicineController extends Controller
             ->allowedFilters([
                 'type', 'scientific_name', 'trade_name',
             ])
-            ->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at','discount','photo'])
-            ->with('manufacturer');
+            ->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at', 'discount', 'photo'])
+            ->filterExpiredAndTrashed($request)
+            ->with('manufacturer')
+            ->paginate();
 
-        if($request->has('expired')){
-            $medicines= $medicines->where('expires_at', '<', now()) ;
-        }else {
-            $medicines= $medicines->where('expires_at', '>', now()) ;
-        }
-
-        if ($request->has('trashed')) {
-            $medicines = $medicines->onlyTrashed()->paginate();
-        } else {
-            $medicines = $medicines->withoutTrashed()->paginate();
-        }
 
         return MedicineResource::collection($medicines);
 
@@ -201,13 +190,8 @@ class MedicineController extends Controller
         $validated['expires_at'] = now()->addDays($validated['days'] + $validated['months'] * 30 + $validated['years'] * 365);
         unset($validated['days'], $validated['months'], $validated['years']);
 
-        if ($request->photo !=null) {
-            $filename = $request->photo->getClientOriginalName();
-            $filePath = 'photos/' . $filename;
-            if (!Storage::disk('public')->exists($filePath)) {
-                $filePath = $request->photo->store('photos', 'public');
-            }
-            $validated['photo'] = $filePath;
+        if ($request->photo != null) {
+            $validated['photo'] = $request->photo->store('photos', 'public'); // photo path
         } else {
             $validated['photo'] = 'photos/Untitled.jpeg';
         }
@@ -252,7 +236,7 @@ class MedicineController extends Controller
      * }
      * }
      * }
- * }
+     * }
      *
      * @response 404 {
      *  "message" => "object not found "
@@ -262,7 +246,7 @@ class MedicineController extends Controller
      */
     public function show(Medicine $medicine)
     {
-        $medicine = Medicine::where('id', $medicine->id)->with('manufacturer')->first();
+        $medicine->load('manufacturer');
         return response()->json([
             'medicine' => new MedicineResource($medicine),
 
@@ -309,8 +293,8 @@ class MedicineController extends Controller
     {
         $medicines = Medicine::Search($request->search)
             ->query(function ($query) {
-                $query->with('manufacturer');
                 $query->where('expires_at', '>', now());
+                $query->with('manufacturer');
             })
             ->paginate();
 
@@ -397,6 +381,7 @@ class MedicineController extends Controller
         ]);
 
     }
+
     /**
      * moving  a specific medicine to trash
      *
@@ -433,6 +418,7 @@ class MedicineController extends Controller
         ]);
 
     }
+
     /**
      * restore a specific medicine from trash
      *
@@ -480,6 +466,7 @@ class MedicineController extends Controller
         ], Response::HTTP_BAD_REQUEST);
 
     }
+
     /**
      * delete a specific medicine forever from trash
      *
@@ -513,16 +500,12 @@ class MedicineController extends Controller
 
     public function force_delete($medicine)
     {
-        $medicine = Medicine::withTrashed()->find($medicine);
-        if ($medicine->trashed()) {
-            $medicine->forceDelete();
-            return response()->json([
-                'message' => 'medicine deleted successfully'
-            ]);
-        }
+        $medicine = Medicine::onlyTrashed()->find($medicine);
+        $medicine->forceDelete();
         return response()->json([
-            'message' => 'medicine cant be deleted'
-        ],Response::HTTP_BAD_REQUEST);
+            'message' => 'medicine deleted successfully'
+        ]);
+
 
     }
 

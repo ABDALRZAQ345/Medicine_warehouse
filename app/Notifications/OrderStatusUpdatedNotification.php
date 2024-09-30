@@ -5,17 +5,18 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class ExpiryAlertNotification extends Notification
+class OrderStatusUpdatedNotification extends Notification
 {
     use Queueable;
-    protected $medicine;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($medicine)
-    {
-        $this->medicine = $medicine;
+    protected $order;
 
+    public function __construct($order)
+    {
+        $this->order = $order;
     }
 
     /**
@@ -31,12 +32,13 @@ class ExpiryAlertNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'medicine_id' => $this->medicine->id,
-            'trade_name' => $this->medicine->trade_name,
-            'expires_at' => $this->medicine->expires_at,
-            'message' => 'The medicine ' . $this->medicine->trade_name . ' is going to expire soon.',
+            'message' => 'order status updated ',
+            'order_id' => $this->order->id,
+            'status' => $this->order->status,
+            'payment_status' => $this->order->payment_status,
         ];
     }
+
     /**
      * Get the array representation of the notification.
      *
@@ -45,7 +47,7 @@ class ExpiryAlertNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+
         ];
     }
 }

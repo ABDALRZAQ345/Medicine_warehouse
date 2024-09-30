@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useCustomerModel(User::class);
 
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(50)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('email_verification', function (Request $request) {
             return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
