@@ -15,9 +15,10 @@ class ApiPassword
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->header('api_password') != '789456123'){
-            return response()->json(['message'=>'Unauthenticated'], Response::HTTP_UNAUTHORIZED);
+        if ($request->header('api_password') != env('API_PASSWORD')) {
+            return response()->json(['message' => 'Unauthenticated'], Response::HTTP_UNAUTHORIZED);
         }
+
         return $next($request);
     }
 }

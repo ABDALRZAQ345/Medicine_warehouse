@@ -5,13 +5,8 @@ namespace App\Jobs;
 use App\Models\Medicine;
 use App\Models\User;
 use App\Notifications\ExpiryAlertNotification;
-use App\Notifications\OrderStatusUpdatedNotification;
-use App\Notifications\QuantityAlertNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Notification;
 
 class SendExpiryNotifications implements ShouldQueue
@@ -36,7 +31,7 @@ class SendExpiryNotifications implements ShouldQueue
             ->get();
         $admins = User::whereRelation('roles', 'name', '=', 'admin')->get();
         foreach ($medicines as $medicine) {
-            Notification::send($admins,new ExpiryAlertNotification($medicine));
+            Notification::send($admins, new ExpiryAlertNotification($medicine));
         }
     }
 }

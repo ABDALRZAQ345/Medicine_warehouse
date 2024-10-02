@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 
 class WordServices
 {
-    public function generateInvoice($order,$user)
+    public function generateInvoice($order, $user)
     {
-        $phpWord = new PhpWord();
+        $phpWord = new PhpWord;
 
         // إعداد بعض الأنماط
         $phpWord->addTitleStyle(1, ['name' => 'Arial', 'size' => 20, 'bold' => true], ['alignment' => 'center']);
@@ -20,7 +20,7 @@ class WordServices
         $tableStyle = [
             'borderSize' => 6,
             'borderColor' => '999999',
-            'cellMargin' => 50
+            'cellMargin' => 50,
         ];
         $phpWord->addTableStyle('productsTable', $tableStyle);
 
@@ -34,29 +34,29 @@ class WordServices
         $section->addTextBreak(1);
 
         // بيانات العميل
-        $section->addText('name  :' . $user->first_name, 'boldText');
-        $section->addText('email :' .$user->email, 'normalText');
-        $section->addText('date : ' .$order->created_at, 'normalText');
+        $section->addText('name  :'.$user->first_name, 'boldText');
+        $section->addText('email :'.$user->email, 'normalText');
+        $section->addText('date : '.$order->created_at, 'normalText');
 
         // فاصل بين الأقسام
         $section->addTextBreak(1);
 
         // بيانات الطلب
-        $section->addText("Order number ".$order->id, 'boldText');
-        $section->addText("Products :", 'boldText');
+        $section->addText('Order number '.$order->id, 'boldText');
+        $section->addText('Products :', 'boldText');
 
         // إنشاء جدول للمنتجات
         $table = $section->addTable('productsTable');
 
         // إضافة صف الرأس
         $table->addRow();
-        $table->addCell(4000)->addText("scientific_name", 'boldText');
-        $table->addCell(2000)->addText("trade_name", 'boldText');
+        $table->addCell(4000)->addText('scientific_name', 'boldText');
+        $table->addCell(2000)->addText('trade_name', 'boldText');
         $table->addCell(2000)->addText('quantity', 'boldText');
         $table->addCell(2000)->addText('price', 'boldText');
 
         // بيانات المنتجات (مثال)
-        $medicines=$order->items;
+        $medicines = $order->items;
         foreach ($medicines as $medicine) {
             $table->addRow();
             $table->addCell(4000)->addText($medicine->scientific_name, 'normalText');
@@ -66,12 +66,11 @@ class WordServices
 
         }
 
-
         // إضافة خط فاصل بين الجدول والمجموع
         $section->addTextBreak(1);
 
         // المجموع
-        $section->addText('total price : ' . $order->total_price , 'boldText');
+        $section->addText('total price : '.$order->total_price, 'boldText');
 
         // إنشاء ملف وورد
         $fileName = 'order'.$order->id.'docx';

@@ -13,6 +13,8 @@ class SendQuantityNotification implements ShouldQueue
 {
     use Queueable;
 
+    protected const Quantity = 100;
+
     /**
      * Create a new job instance.
      */
@@ -27,10 +29,10 @@ class SendQuantityNotification implements ShouldQueue
     public function handle(): void
     {
         //
-        $medicines = Medicine::where('quantity', '<=', 100)->get();
+        $medicines = Medicine::where('quantity', '<=', self::Quantity)->get();
         $admins = User::whereRelation('roles', 'name', '=', 'admin')->get();
         foreach ($medicines as $medicine) {
-            Notification::send($admins,new QuantityAlertNotification($medicine));
+            Notification::send($admins, new QuantityAlertNotification($medicine));
         }
     }
 }

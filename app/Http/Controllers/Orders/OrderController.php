@@ -3,40 +3,45 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Order\OrderRequest;
+use App\Http\Requests\Order\StoreOrderRequest;
+use App\Http\Requests\Order\UpateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Jobs\SendNewOrderNotification;
 use App\Jobs\SendOrderStatusUpdatedNotification;
-use App\Models\Medicine;
 use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\WordServices;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @group Order
  */
 class OrderController extends Controller
 {
-    protected OrderService $orderService ;
+    protected OrderService $orderService;
 
-    public function __construct(OrderService $orderService){
+    public function __construct(OrderService $orderService)
+    {
         $this->orderService = $orderService;
     }
+
     /**
      * Make a new Order
      *
      * @description This endpoint is accessible only to users  not admins
+     *
      * @authenticated
+     *
      * @header Authorization Bearer {access_token}
+     *
      * @response  403 {
      * "message": "User does not have the right role ."
      * }
-     *
      * @response  401 {
      * "message": "Unauthenticated."
      * }
-     *
      * @response 422  if one of the medicines not found
      * {
      * "message": "The selected medicines.0.id is invalid.",
@@ -46,7 +51,6 @@ class OrderController extends Controller
      * ]
      * }
      * }
-     *
      * @response  422  if no medicines passed
      * {
      * "message": "The medicines field is required.",
@@ -56,7 +60,6 @@ class OrderController extends Controller
      * ]
      * }
      * }
-     *
      * @response 201 {
      * "message": "Order placed successfully",
      * "order": {
@@ -69,30 +72,26 @@ class OrderController extends Controller
      * "id": 1
      * }
      * }
-     *
-     *
      */
-
-    public function store(OrderRequest $request)
+    public function store(StoreOrderRequest $request)
     {
 
-       $validated=$request->validated();
+        $validated = $request->validated();
 
         try {
-            $order=$this->orderService->store($validated);
-        }catch (\Exception $e){
+            $order = $this->orderService->store($validated);
+        } catch (Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
             ], 400);
         }
-
 
         dispatch(new SendNewOrderNotification($order));
 
         return response()->json([
             'message' => 'Order placed successfully',
             'order' => new OrderResource($order),
-            'download_word_invoice_url' => env('APP_URL') . "/api/get_order_invoice/" .$order->id
+            'download_word_invoice_url' => env('APP_URL').'/api/get_order_invoice/'.$order->id,
         ], 201);
 
     }
@@ -101,12 +100,14 @@ class OrderController extends Controller
      * Showing the user 's orders and if he is admin showing all orders
      *
      * @authenticated
+     *
      * @header Authorization Bearer {access_token}
+     *
      * @queryParam payment_status 0 for unpaid and 1 for paid
+     *
      * @response  401 {
      * "message": "Unauthenticated."
      * }
-     *
      * @response 200 {
      * "data": [
      * {
@@ -152,16 +153,15 @@ class OrderController extends Controller
      * "total": 1
      * }
      * }
-     *
      */
-
     public function index(Request $request)
     {
-        $user = \Auth::user();
+        $user = Auth::user();
         $orders = $user->hasRole('admin') ? Order::query() : $user->orders();
 
         $filters = $request->only(['payment_status', 'status']);
         $orders = $orders->filter($filters)->paginate();
+
         return OrderResource::collection($orders);
 
     }
@@ -170,20 +170,20 @@ class OrderController extends Controller
      * update  a status for a specific  Order
      *
      * @description This endpoint is accessible only to admins
+     *
      * @authenticated
+     *
      * @header Authorization Bearer {access_token}
+     *
      * @response  403 {
      * "message": "User does not have the right role ."
      * }
-     *
      * @response  401 {
      * "message": "Unauthenticated."
      * }
-     *
      * @response 404 {
      * "message": " not found."
      * }
-     *
      * @response  422 {
      * "message": "The status field must be between 0 and 2. (and 1 more error)",
      * "errors": {
@@ -195,16 +195,10 @@ class OrderController extends Controller
      * ]
      * }
      * }
-     *
-     *
      */
-
-    public function update(Request $request, Order $order)
+    public function update(UpateOrderRequest $request, Order $order)
     {
-        $validated=$request->validate([
-            'status' => ['required', "integer", 'between:0,2'],
-            'payment_status' => ['required', 'boolean'],
-        ]);
+        $validated = $request->validated();
 
         $order->update($validated);
 
@@ -212,17 +206,28 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Order status updated successfully',
-            'order' => new OrderResource($order)
+            'order' => new OrderResource($order),
         ]);
     }
 
-   public function get_order_invoice(WordServices $wordServices,$order) {
+    public function get_order_invoice(WordServices $wordServices, $order)
+    {
 
-        $user = \Auth::user();
-       $order=$user->orders()->findOrFail($order);
-        $filePath = $wordServices->generateInvoice($order,$user);
+        $user = Auth::user();
+        $order = $user->orders()->findOrFail($order);
+        $filePath = $wordServices->generateInvoice($order, $user);
+
         return response()->download($filePath);
 
     }
 
+    public function show(Order $order)
+    {
+
+        $user = Auth::user();
+        $order = $user->orders()->findOrFail($order->id);
+        $order->load('items');
+
+        return new OrderResource($order);
+    }
 }

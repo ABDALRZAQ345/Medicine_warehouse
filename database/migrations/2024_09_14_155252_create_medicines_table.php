@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Manufacturer;
-use App\Models\Medicine;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,12 +18,12 @@ return new class extends Migration
             $table->string('scientific_name');
             $table->string('trade_name');
             $table->string('type');
-            $table->foreignIdFor(Manufacturer::class,'manufacturer_id');
+            $table->foreignIdFor(Manufacturer::class, 'manufacturer_id');
             $table->integer('quantity');
             $table->float('price');
-            $table->foreignIdFor(User::class,'creator_id');
+            $table->foreignIdFor(User::class, 'creator_id');
             $table->timestamp('expires_at')->nullable();
-            $table->fullText(['scientific_name','trade_name','type']);
+            $table->fullText(['scientific_name', 'trade_name', 'type']);
             $table->softDeletes();
             $table->timestamps();
         });

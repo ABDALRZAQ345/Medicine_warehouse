@@ -2,24 +2,25 @@
 
 namespace App\Models;
 
-use Laravel\Cashier\Billable;
-use Laravel\Sanctum\PersonalAccessToken;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-
-    use HasFactory, Notifiable, HasRoles,HasApiTokens ,Billable;
+    use Billable, HasApiTokens, HasFactory,HasRoles ,Notifiable;
 
     protected $fillable = [
         'first_name',
         'last_name',
         'email',
         'password',
+        'phone',
+        'photo',
     ];
 
     protected $hidden = [
@@ -28,16 +29,17 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-   protected $casts = [
-       'email_verified_at' => 'datetime:Y-m-d H:m:s',
-       'created_at' => 'datetime:Y-m-d H:m:s',
-       'updated_at' => 'datetime:Y-m-d H:m:s',
-   ];
+    protected $casts = [
+        'email_verified_at' => 'datetime:Y-m-d H:m:s',
+        'created_at' => 'datetime:Y-m-d H:m:s',
+        'updated_at' => 'datetime:Y-m-d H:m:s',
+    ];
 
     public function Email_verification_tokens()
     {
         return $this->hasMany(EmailVerificationToken::class);
     }
+
     public function tokens()
     {
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
@@ -45,16 +47,22 @@ class User extends Authenticatable
 
     public function medicines()
     {
-        return $this->hasMany(Medicine::class,'creator_id');
-    }
-    public function orders(){
-        return $this->hasMany(Order::class,'orderer_id');
+        return $this->hasMany(Medicine::class, 'creator_id');
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'orderer_id');
+    }
 
-///////
-///
-//
+    public function favourites()
+    {
+        return $this->belongsToMany(Medicine::class, 'favourites');
+    }
+
+    ///////
+    ///
+    //
     protected static function boot()
     {
         parent::boot();
@@ -63,20 +71,17 @@ class User extends Authenticatable
             $user->roles()->detach();
             $user->permissions()->detach();
             $user->tokens()->delete();
-            $user->medicines()->detach();
-            $user->orders()->detach();
+            $user->orders()->delete();
             $user->Email_verification_tokens()->delete();
         });
-//        static::created(function ($user) {
-//            if (!Role::where('name', 'user')->exists())
-//                Role::create(['name' => 'user']);
-//            $user->assignRole('user');
-//        });
+        //        static::created(function ($user) {
+        //            if (!Role::where('name', 'user')->exists())
+        //                Role::create(['name' => 'user']);
+        //            $user->assignRole('user');
+        //        });
     }
 
-
-
-//
-///
-////
+    //
+    ///
+    ////
 }

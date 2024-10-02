@@ -4,7 +4,7 @@ namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderRequest extends FormRequest
+class UpateOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'medicines' => 'required|array',
-            'medicines.*.id' => 'required|exists:medicines,id',
-            'medicines.*.quantity' => 'required|integer|min:1',
+            'status' => ['required', 'integer', 'between:0,2'],
+            'payment_status' => ['required', 'boolean'],
         ];
     }
 }

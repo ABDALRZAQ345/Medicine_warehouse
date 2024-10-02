@@ -4,10 +4,7 @@ namespace App\Jobs;
 
 use App\Notifications\OrderStatusUpdatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class SendOrderStatusUpdatedNotification implements ShouldQueue
 {
@@ -17,6 +14,7 @@ class SendOrderStatusUpdatedNotification implements ShouldQueue
      * Create a new job instance.
      */
     protected $order;
+
     public function __construct($order)
     {
         $this->order = $order;

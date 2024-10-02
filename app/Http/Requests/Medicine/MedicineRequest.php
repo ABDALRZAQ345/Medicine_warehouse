@@ -22,17 +22,17 @@ class MedicineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'scientific_name' => ['required', 'string','max:255'],
-            'trade_name' => ['required', 'string','max:70'],
-            'type' => ['required', 'string','max:70'],
+            'scientific_name' => ['required', 'string', 'max:255'],
+            'trade_name' => ['required', 'string', 'max:70'],
+            'type' => ['required', 'string', 'max:70'],
             'manufacturer_id' => ['required', 'exists:manufacturers,id'],
-            'quantity' => ['required', 'integer','min:1'],
-            'price' => ['required', 'numeric','min:1'],
-            'days' => ['required','integer'],
-            'months' => ['required','integer'],
-            'years' => ['required','integer'],
-            'discount' => ['required', 'integer','min:0','max:100'],
-            'photo' => ['nullable','image','mimes:jpg,png,jpeg','max:3072'],
+            'quantity' => ['required', 'integer', 'min:1'],
+            'price' => ['required', 'numeric', 'min:1'],
+            'days' => ['required', 'integer'],
+            'months' => ['required', 'integer'],
+            'years' => ['required', 'integer'],
+            'discount' => ['required', 'integer', 'min:0', 'max:100'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,png,jpeg', 'max:3072'],
         ];
     }
 }

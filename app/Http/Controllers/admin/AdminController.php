@@ -3,18 +3,43 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\AdminServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-
 class AdminController extends Controller
 {
+    public function index(Request $request)
+    {
+
+        $users = User::query();
+        if ($request->has('role') && $request->get('role') == 'admin') {
+            $users->where(function ($query) {
+                $query->wherehas('roles', function ($query) {
+                    $query->where('name', 'admin');
+                });
+            });
+        } elseif ($request->has('role') && $request->get('role') == 'user') {
+            $users->where(function ($query) {
+                $query->wherehas('roles', function ($query) {
+                    $query->where('name', 'user');
+                });
+            });
+        }
+        if ($request->has('email')) {
+            $users = $users->where('email', $request->get('email'))->first();
+        } else {
+            $users = $users->paginate();
+        }
+
+        return UserResource::collection($users);
+    }
 
     //
-    public function index(AdminServices $adminServices)
+    public function panel(AdminServices $adminServices)
     {
 
         $data = Cache::remember('admin_panel', 600, function () use ($adminServices) {
@@ -42,10 +67,20 @@ class AdminController extends Controller
 
         $user->roles()->detach();
         $user->assignRole($request->role);
+
         return response()->json([
-            'message' => 'role changed to ' . $request->role,
+            'message' => 'role changed to '.$request->role,
             'user_roles' => $user->roles,
         ]);
 
+    }
+
+    public function ShowUser($user)
+    {
+        $user = User::findOrFail($user);
+
+        return response()->json([
+            'user' => new UserResource($user),
+        ]);
     }
 }

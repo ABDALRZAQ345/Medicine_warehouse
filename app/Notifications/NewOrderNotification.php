@@ -35,6 +35,7 @@ class NewOrderNotification extends Notification
             'message' => 'new order ',
             'order_id' => $this->order->id,
             'user_id' => $this->order->user->id,
+            'url' => route('orders.show', $this->order),
         ];
     }
 

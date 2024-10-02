@@ -25,9 +25,10 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email:dns'],
-            'password' => ['required', 'min:8', 'max:20']
+            'password' => ['required', 'min:8', 'max:100'],
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

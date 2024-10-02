@@ -20,10 +20,9 @@ class AuthListener
     public function handleUserRegistered(RegisteredEvent $event): void
     {
 
-        Mail::to($event->user->email)->queue(new CheckRegistration($event->user,$event->str));
+        Mail::to($event->user->email)->queue(new CheckRegistration($event->user, $event->str));
 
     }
-
 
     /**
      * Register the listeners for the subscriber.
@@ -41,5 +40,4 @@ class AuthListener
     /**
      * Handle the event.
      */
-
 }

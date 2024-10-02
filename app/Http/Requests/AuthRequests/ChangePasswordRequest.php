@@ -5,6 +5,7 @@ namespace App\Http\Requests\AuthRequests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rules\Password;
 
 class ChangePasswordRequest extends FormRequest
 {
@@ -25,10 +26,11 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'old_password' => 'required',
-            'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required|min:8',
+            'password' => ['required', 'confirmed', Password::min(8)->max(100)->letters()->numbers()->symbols()],
+            'password_confirmation' => ['required'],
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

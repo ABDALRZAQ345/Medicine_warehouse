@@ -2,22 +2,18 @@
 
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\MailVerificationController;
-use App\Http\Controllers\Medicine\MedicineController;
 use App\Models\User;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
-Route::get('/medicines/{medicine}', [MedicineController::class, 'show'])->name('medicines.show');
+use Illuminate\Support\Facades\Route;
 
-Route::get('/verify-email/{id}/{hash}',[MailVerificationController::class,'verify'])->name('verification.verify');
-
+Route::get('/verify-email/{id}/{hash}', [MailVerificationController::class, 'verify'])->name('verification.verify');
 
 /// change password
-Route::get('/',function (){
-   return 'email sent successfully';
+Route::get('/', function () {
+    return 'email sent successfully';
 });
 Route::get('/reset-password/{token}', [ChangePasswordController::class, 'Password_reset'])->middleware('guest')->name('password.reset');
 Route::post('/reset-password', [ChangePasswordController::class, 'store'])->middleware('guest')->name('password.store');
-
 
 //Route::post('/create-checkout-session',[\App\Http\Controllers\Stripe::class,'pay']);
 //
@@ -64,7 +60,3 @@ Route::post('/reset-password', [ChangePasswordController::class, 'store'])->midd
 //                'cancel_url' => "http://127.0.0.1:8000/cancel",
 //            ]);
 //    });
-
-
-
-

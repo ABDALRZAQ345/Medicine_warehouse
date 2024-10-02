@@ -2,13 +2,16 @@
 
 namespace App\Notifications;
 
+use App\Models\Medicine;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class QuantityAlertNotification extends Notification
 {
     use Queueable;
-    protected $medicine;
+
+    protected Medicine $medicine;
+
     /**
      * Create a new notification instance.
      */
@@ -34,9 +37,11 @@ class QuantityAlertNotification extends Notification
             'medicine_id' => $this->medicine->id,
             'trade_name' => $this->medicine->trade_name,
             'quantity' => $this->medicine->quantity,
-            'message' => 'The medicine ' . $this->medicine->trade_name . ' is going to finish or its already finished ',
+            'message' => 'The medicine '.$this->medicine->trade_name.' is going to finish or its already finished ',
+            'url' => route('medicines.show', ['medicine' => $this->medicine]),
         ];
     }
+
     /**
      * Get the array representation of the notification.
      *

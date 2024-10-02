@@ -5,6 +5,7 @@ namespace App\Http\Requests\AuthRequests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rules\Password;
 
 class SignupRequest extends FormRequest
 {
@@ -21,18 +22,17 @@ class SignupRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
-
     public function rules(): array
     {
         return [
             'first_name' => ['required', 'max:255'],
             'last_name' => ['required', 'max:255'],
             'email' => ['required', 'email:dns', 'unique:users'],
-            'password' => ['required', 'min:8', 'max:100', 'confirmed'],
-//            'photo' => ['image']
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->symbols()->numbers()->max(100)],
+            //            'photo' => ['image']
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
@@ -41,5 +41,4 @@ class SignupRequest extends FormRequest
             ], 422)
         );
     }
-
 }

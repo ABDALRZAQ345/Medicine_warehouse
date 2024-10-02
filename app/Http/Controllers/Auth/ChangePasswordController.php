@@ -11,21 +11,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Lcobucci\JWT\Exception;
 
 /**
  * @subgroupDescription  forget_password
+ *
  * @group Authorization
  */
 class ChangePasswordController extends Controller
 {
     /**
      * @header  Authorization Bearer access_token
+     *
      * @authenticated
      */
     public function ForgetPassword(Request $request)
     {
-
 
         $request->validate([
             'email' => ['required', 'email:dns', 'exists:users,email'],
@@ -35,12 +35,14 @@ class ChangePasswordController extends Controller
             $status = Password::sendResetLink(
                 $request->only('email')
             );
-        } catch (Exception $e) {
-            return response()->json(['error' => 'some thing went wrong check your internet and try again ']);
+            if ($status === Password::RESET_LINK_SENT) {
+                return response()->json(['message' => __($status)], 200);
+            }
+
+            return response()->json(['error' => __($status)], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'some thing went wrong check your internet and try again '], 400);
         }
-
-
-        return response()->json(__($status));
 
     }
 
@@ -63,7 +65,7 @@ class ChangePasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();
@@ -80,8 +82,9 @@ class ChangePasswordController extends Controller
     ///
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
+     *
      * @authenticated
      */
     public function changePassword(ChangePasswordRequest $request)
@@ -94,12 +97,13 @@ class ChangePasswordController extends Controller
         if (Hash::check($request->old_password, $user->password)) {
             $user->password = Hash::make($request->password);
             $user->save();
+
             return response()->json([
-                'message' => 'Your password has been changed'
+                'message' => 'Your password has been changed',
             ]);
         } else {
             return response()->json([
-                'message' => 'Your old password is incorrect'
+                'message' => 'Your old password is incorrect',
             ], 401);
         }
 

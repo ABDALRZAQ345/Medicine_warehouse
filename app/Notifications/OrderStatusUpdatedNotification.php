@@ -36,6 +36,7 @@ class OrderStatusUpdatedNotification extends Notification
             'order_id' => $this->order->id,
             'status' => $this->order->status,
             'payment_status' => $this->order->payment_status,
+            'url' => route('orders.show', $this->order),
         ];
     }
 

@@ -10,18 +10,13 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AppServiceProvider extends ServiceProvider
 {
-
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -33,9 +28,9 @@ class AppServiceProvider extends ServiceProvider
             ->middleware('api')
             ->group(base_path('routes/api_v2.php'));
 
-        Model::shouldBeStrict(!app()->environment('production'));
+        Model::shouldBeStrict(! app()->environment('production'));
         ///
-        Model::preventLazyLoading(!app()->environment('production'));
+        Model::preventLazyLoading(! app()->environment('production'));
 
         Cashier::useCustomerModel(User::class);
 
@@ -45,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('email_verification', function (Request $request) {
             return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
         });
-
 
     }
 }

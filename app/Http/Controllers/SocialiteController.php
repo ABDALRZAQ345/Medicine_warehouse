@@ -6,11 +6,11 @@ use App\Models\User;
 use Exception;
 use Laravel\Socialite\Facades\Socialite;
 
-
 class SocialiteController extends Controller
 {
     /**
      * @return mixed
+     *
      * @group Authorization
      */
     public function redirectToGoogle()
@@ -20,35 +20,31 @@ class SocialiteController extends Controller
 
     public function callbackGoogle()
     {
-        try{
+        try {
             $user = Socialite::driver('google')->stateless()->user();
-            $finduser=User::where('email',$user->email)->first();
-            if($finduser){
-                return  response()->json([
+            $finduser = User::where('email', $user->email)->first();
+            if ($finduser) {
+                return response()->json([
                     'google_token' => $user->token,
-                   'access_token' => $finduser->createToken('api token')->plainTextToken,
-                   'user' => $user
+                    'access_token' => $finduser->createToken('api token')->plainTextToken,
+                    'user' => $user,
                 ]);
-            }
-            else{
-             $new_user=User::create([
-                'first_name'=>$user->name,
-                'last_name' =>$user->name,
-                'email'=>$user->email,
-                'password'=> \Hash::make(str()->random(12)),
-             ]);
-
+            } else {
+                $new_user = User::create([
+                    'first_name' => $user->name,
+                    'last_name' => $user->name,
+                    'email' => $user->email,
+                    'password' => \Hash::make(str()->random(12)),
+                ]);
 
                 return response()->json([
-                    'google_token' =>  $user->token,
+                    'google_token' => $user->token,
                     'access_token' => $finduser->createToken('api token')->plainTextToken,
-                    'user' => $user
+                    'user' => $user,
                 ]);
 
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             dd($e);
         }
     }

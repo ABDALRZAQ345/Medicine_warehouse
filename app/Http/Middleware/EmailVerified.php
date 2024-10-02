@@ -12,17 +12,17 @@ class EmailVerified
     /**
      * Handle an incoming request.
      *
-     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::user())
+        if (! Auth::user()) {
             return response()->json(['message' => 'Unauthenticated'], Response::HTTP_UNAUTHORIZED);
-        else if (!Auth::user()->email_verified_at)
+        } elseif (! Auth::user()->email_verified_at) {
             return response()->json(['message' => 'you must verify your email before'], Response::HTTP_UNAUTHORIZED);
-        else
+        } else {
             return $next($request);
-
+        }
 
     }
 }

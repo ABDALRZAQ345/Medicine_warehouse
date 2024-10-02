@@ -2,23 +2,22 @@
 
 namespace App\Models;
 
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
-use Illuminate\Database\Eloquent\Builder;
 
 class Medicine extends Model
 {
     use HasFactory,Searchable,softDeletes;
 
+    public function scopeFilterExpiredAndTrashed(Builder $query, $request)
+    {
 
-    public function scopeFilterExpiredAndTrashed(Builder $query, $request){
-
-        if(Auth::user()->hasRole('admin')){
+        if (Auth::user()->hasRole('admin')) {
             if ($request->has('expired')) {
                 $query->where('expires_at', '<', now());
             } else {
@@ -30,31 +29,29 @@ class Medicine extends Model
             } else {
                 $query->withoutTrashed();
             }
-        }
-        else {
+        } else {
             $query->where('expires_at', '>', now());
         }
 
     }
-    protected $guarded=['id'];
+
+    protected $guarded = ['id'];
 
     protected static function boot()
     {
         parent::boot();
 
-
-//        static::creating(function ($medicine) {
-//            if (!Auth::user() || !Auth::user()->hasRole('admin')) {
-//                throw new AuthorizationException('Unauthorized');
-//            }
-//        });
+        //        static::creating(function ($medicine) {
+        //            if (!Auth::user() || !Auth::user()->hasRole('admin')) {
+        //                throw new AuthorizationException('Unauthorized');
+        //            }
+        //        });
     }
 
     public function manufacturer(): BelongsTo
     {
         return $this->belongsTo(Manufacturer::class);
     }
-
 
     /**
      * Get the indexable data array for the model.
@@ -70,6 +67,4 @@ class Medicine extends Model
             // You can include other fields as necessary
         ];
     }
-
-
 }

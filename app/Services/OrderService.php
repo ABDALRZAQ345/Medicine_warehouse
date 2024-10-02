@@ -7,7 +7,6 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
 class OrderService
 {
     public function store($validated)
@@ -22,7 +21,7 @@ class OrderService
                 'orderer_id' => Auth::id(),
                 'total_price' => $totalPrice, // Temporary, will be updated later
                 'status' => 0,
-                'payment_status' => 0
+                'payment_status' => 0,
             ]);
 
             foreach ($validated['medicines'] as $medicineData) {
@@ -31,7 +30,7 @@ class OrderService
 
                 if ($quantity > $medicine->quantity) {
                     DB::rollBack();
-                    throw new \Exception('Not enough medicines available for medicine with id ' . $medicineData['id']);
+                    throw new \Exception('Not enough medicines available for medicine with id '.$medicineData['id']);
                 }
 
                 $totalPrice += ($medicine->price - (($medicine->discount * $medicine->price) / 100.0)) * $quantity;
@@ -50,12 +49,7 @@ class OrderService
             }
             ///
 
-            $order->update([
-                'orderer_id' => Auth::id(),
-                'total_price' => $totalPrice,
-                'status' => 0,
-                'payment_status' => 0
-            ]);
+            $order->update(['total_price' => $totalPrice]);
             $order->save();
             DB::commit();
 

@@ -8,7 +8,9 @@ use Illuminate\Notifications\Notification;
 class ExpiryAlertNotification extends Notification
 {
     use Queueable;
+
     protected $medicine;
+
     /**
      * Create a new notification instance.
      */
@@ -34,9 +36,12 @@ class ExpiryAlertNotification extends Notification
             'medicine_id' => $this->medicine->id,
             'trade_name' => $this->medicine->trade_name,
             'expires_at' => $this->medicine->expires_at,
-            'message' => 'The medicine ' . $this->medicine->trade_name . ' is going to expire soon.',
+            'message' => 'The medicine '.$this->medicine->trade_name.' is going to expire soon.',
+            'url' => route('medicines.show', ['medicine' => $this->medicine]),
+
         ];
     }
+
     /**
      * Get the array representation of the notification.
      *
