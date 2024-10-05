@@ -9,23 +9,17 @@ use App\Models\Medicine;
 use Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\QueryBuilder\QueryBuilder;
-use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @group Medicine
- */
 class MedicineController extends Controller
 {
     public function index(Request $request)
     {
-        $medicines = QueryBuilder::for(Medicine::class)
-            ->allowedFilters([
-                'type', 'scientific_name', 'trade_name',
-            ])
-            ->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at', 'discount', 'photo'])
-            ->filterExpiredAndTrashed($request)
-            ->with('manufacturer')
+        $medicines = Medicine::Search($request->search)
+            ->query(function ($query) use ($request) {
+                $query->select(['id', 'type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'expires_at', 'discount', 'photo']);
+                $query->filterExpiredAndTrashed($request);
+                $query->with('manufacturer');
+            })
             ->paginate();
 
         return MedicineResource::collection($medicines);
@@ -71,18 +65,6 @@ class MedicineController extends Controller
         ]);
     }
 
-    public function search(Request $request)
-    {
-        $medicines = Medicine::Search($request->search)
-            ->query(function ($query) {
-                $query->where('expires_at', '>', now());
-                $query->with('manufacturer');
-            })
-            ->paginate();
-
-        return response()->json($medicines);
-    }
-
     public function update(MedicineRequest $request, Medicine $medicine)
     {
         $validated = $request->validated();
@@ -118,29 +100,12 @@ class MedicineController extends Controller
     public function restore($medicine)
     {
 
-        $medicine = Medicine::withTrashed()->find($medicine);
+        $medicine = Medicine::onlyTrashed()->findOrFail($medicine);
 
-        if ($medicine->trashed()) {
-            $medicine->restore();
-
-            return response()->json([
-                'message' => 'medicine restored successfully',
-            ]);
-        }
+        $medicine->restore();
 
         return response()->json([
-            'message' => 'medicine not restored because it is already restored',
-        ], Response::HTTP_BAD_REQUEST);
-
-    }
-
-    public function force_delete($medicine)
-    {
-        $medicine = Medicine::onlyTrashed()->find($medicine);
-        $medicine->forceDelete();
-
-        return response()->json([
-            'message' => 'medicine deleted successfully',
+            'message' => 'medicine restored successfully',
         ]);
 
     }

@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Controllers\Medicine;
 
-use App\Http\Requests\Medicine\MedicineRequest;
-use App\Http\Resources\MedicineResource;
 use App\Models\Manufacturer;
 use App\Models\Medicine;
 use App\Models\User;
@@ -19,7 +17,7 @@ class UpdateMedicineTest extends TestCase
         $user->assignRole('admin');
         $medicine = Medicine::factory()->create();
         Sanctum::actingAs($user);
-        $manufacturer= Manufacturer::factory()->create(['name'=> 'd']);
+        $manufacturer = Manufacturer::factory()->create(['name' => 'd']);
         // Send update request with valid data
         $response = $this->putJson(route('medicines.update', $medicine->id), [
             'type' => 'capsule',
@@ -44,6 +42,7 @@ class UpdateMedicineTest extends TestCase
             'trade_name' => 'Updated Trade Name',
         ]);
     }
+
     ///
     public function test_non_admins_cannot_update_medicine()
     {
@@ -51,7 +50,7 @@ class UpdateMedicineTest extends TestCase
         $user = User::factory()->create();
         $medicine = Medicine::factory()->create();
         Sanctum::actingAs($user);
-        $manufacturer= Manufacturer::factory()->create(['name'=> 'd']);
+        $manufacturer = Manufacturer::factory()->create(['name' => 'd']);
         // Send update request with valid data
         $response = $this->putJson(route('medicines.update', $medicine->id), [
             'type' => 'capsule',
@@ -68,7 +67,6 @@ class UpdateMedicineTest extends TestCase
 
         $response->assertStatus(403);
 
-
         // Assert that the medicine was updated in the database
         $this->assertDatabaseMissing('medicines', [
             'id' => $medicine->id,
@@ -76,6 +74,7 @@ class UpdateMedicineTest extends TestCase
             'trade_name' => 'Updated Trade Name',
         ]);
     }
+
     public function test_it_validates_medicine_update_request()
     {
         // Create a user and a medicine
@@ -89,8 +88,6 @@ class UpdateMedicineTest extends TestCase
 
         // Assert validation errors
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'days', 'months', 'years','discount']);
+        $response->assertJsonValidationErrors(['type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'days', 'months', 'years', 'discount']);
     }
-
-
 }

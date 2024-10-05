@@ -29,23 +29,19 @@ class Medicine extends Model
             } else {
                 $query->withoutTrashed();
             }
-        } else {
-            $query->where('expires_at', '>', now());
         }
 
     }
 
     protected $guarded = ['id'];
 
-    protected static function boot()
+    public static function booted(): void
     {
-        parent::boot();
-
-        //        static::creating(function ($medicine) {
-        //            if (!Auth::user() || !Auth::user()->hasRole('admin')) {
-        //                throw new AuthorizationException('Unauthorized');
-        //            }
-        //        });
+        static::addGlobalScope('global', function (Builder $builder) {
+            if (! Auth::user()->hasRole('admin')) {
+                $builder->withoutTrashed()->where('expires_at', '>', now());
+            }
+        });
     }
 
     public function manufacturer(): BelongsTo

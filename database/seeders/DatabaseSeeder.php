@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Manufacturer;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        Manufacturer::factory(100)->create(['name' => fake()->name]);
-        $this->call(MedicineSeeder::class);
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(MedicineSeeder::class);
     }
 }

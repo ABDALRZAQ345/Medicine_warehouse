@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\UserManagementController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\MailVerificationController;
@@ -37,17 +38,16 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         });
 
         Route::group([], function () {
+
             Route::post('/medicines', [MedicineController::class, 'store'])->middleware('role:admin')->name('medicines.store');
             Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
             Route::get('/medicines/{medicine}', [MedicineController::class, 'show'])->name('medicines.show');
             Route::put('/medicines/{medicine}', [MedicineController::class, 'update'])->middleware('role:admin')->name('medicines.update');
             Route::delete('/medicines/{medicine}', [MedicineController::class, 'destroy'])->middleware('role:admin')->name('medicines.delete');
             Route::post('/medicines/{medicine}/restore', [MedicineController::class, 'restore'])->middleware('role:admin')->name('medicine.restore');
-            Route::delete('/medicines/{medicine}/force_delete', [MedicineController::class, 'force_delete'])->middleware('role:admin')->name('medicine.force_delete');
-            Route::post('/medicines/search', [MedicineController::class, 'search'])->name('medicines.search.com');
             Route::post('/medicines/{medicine}/favourites', [FavouriteController::class, 'store'])->name('favourites.store');
             Route::get('/favourites', [FavouriteController::class, 'index'])->name('favourites.index');
-            Route::post('/orders', [OrderController::class, 'store'])->middleware('role:user')->name('orders.store');
+            Route::post('/orders', [OrderController::class, 'store'])->middleware(['role:user', 'email_verified'])->name('orders.store');
             Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
             Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
             Route::put('/orders/{order}', [OrderController::class, 'update'])->middleware('role:admin')->name('orders.update');
@@ -57,9 +57,9 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
         Route::middleware(['role:admin'])->group(function () {
             Route::get('/admin_panel', [AdminController::class, 'panel'])->name('admin');
-            Route::post('/change_role/{user}', [AdminController::class, 'change_role'])->middleware('permission:chang_role_permission')->name('change_role');
-            Route::get('/users/{user}', [AdminController::class, 'ShowUser'])->name('user.show');
-            Route::get('/users', [AdminController::class, 'index'])->name('admins.index');
+            Route::post('/users/{user}/change_role', [UserManagementController::class, 'change_role'])->middleware('permission:chang_role_permission')->name('change_role');
+            Route::get('/users/{user}', [UserManagementController::class, 'show'])->name('user.show');
+            Route::get('/users', [UserManagementController::class, 'index'])->name('admins.index');
             Route::get('/manufacturer', [ManufacturerController::class, 'index'])->name('manufacturer.index');
             Route::post('/manufacturer', [ManufacturerController::class, 'store'])->name('manufacturer.store');
             Route::delete('/manufacturer/{manufacturer}', [ManufacturerController::class, 'destroy'])->name('manufacturer.destroy');

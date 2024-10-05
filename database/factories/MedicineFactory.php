@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +25,7 @@ class MedicineFactory extends Factory
             'price' => fake()->numberBetween(0, 1000),
             'creator_id' => 1,
             'expires_at' => now()->addMonths(6),
-            'manufacturer_id' => rand(1, 100),
+            'manufacturer_id' => Manufacturer::factory()->create(['name' => fake()->name])->id,
         ];
     }
 }

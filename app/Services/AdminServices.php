@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class AdminServices
 {
-    public function get_data()
+    public function get_panel_data()
     {
         $earned = Order::where('payment_status', '=', 1)->sum('total_price');
-        $losses = Medicine::where('expires_at', '<', now())->sum(DB::raw('quantity * price'));
+        $losses = Medicine::withTrashed()->where('expires_at', '<', now())->sum(DB::raw('quantity * price'));
         $unpaid = Order::where('payment_status', '=', 0)->sum('total_price');
         $paid_orders = Order::where('payment_status', '=', 1)->count();
         $unpaid_orders = Order::where('payment_status', '=', 0)->count();

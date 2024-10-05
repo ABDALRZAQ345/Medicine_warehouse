@@ -8,19 +8,20 @@ use App\Http\Requests\AuthRequests\LoginRequest;
 use App\Http\Requests\AuthRequests\SignupRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-/**
- *  @subgroupDescription  Log in, sign up, delete account ,update account information's  and log out
- *
- * @group Authorization
- */
 class AuthController extends Controller
 {
-    ///
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
@@ -44,48 +45,27 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['password'] = Hash::make($validated['password']);
-
-        //        $photo_path = 'photos/Untitled.png';
-        //        if ($request->photo)
-        //            $photo_path = $request->photo->store('photos', 'public');
-        //        $validated['photo'] = $photo_path;
-
         try {
-            DB::beginTransaction();
-            $user = User::create($validated)->assignRole('user');
+            // Use the UserService to create the user and get the verification email token
+            [$user, $verificationToken] = $this->userService->createUser($validated);
 
-            $str = str()->random(60);
+            event(new RegisteredEvent($user, $verificationToken));
 
-            $user->Email_verification_tokens()->create([
-                'token' => Hash::make($str),
-                'expires_at' => now()->addHours(24),
-            ]);
             $access_token = $user->createToken('access_token')->plainTextToken;
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
 
+            return response()->json([
+                'data' => new UserResource($user),
+                'access_token' => $access_token,
+                'token_type' => 'Bearer',
+                'role' => $user->roles->pluck('name')->first(),
+                'message' => 'User registered successfully! Please check your email to verify your account.',
+            ]);
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        event(new RegisteredEvent($user, $str));
-
-        return response()->json([
-            'data' => new UserResource(User::find($user->id)),
-            'access_token' => $access_token,
-            'token_type' => 'Bearer',
-            'role' => $user->roles->pluck('name')->first(),
-            'message' => 'User registered successfully! Please check your email to verify your account.',
-        ]);
-
     }
 
-    /**
-     * @header Authorization Bearer access_token
-     *
-     * @authenticated
-     */
     public function logout(Request $request)
     {
 
@@ -94,11 +74,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully!']);
     }
 
-    /**
-     * @header Authorization Bearer access_token
-     *
-     * @authenticated
-     */
     public function delete()
     {
         $user = Auth::user();
@@ -119,11 +94,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'account deleted successfully']);
     }
 
-    /**
-     * @header Authorization Bearer access_token
-     *
-     * @authenticated
-     */
     public function update(Request $request)
     {
         $validated = $request->validate([
