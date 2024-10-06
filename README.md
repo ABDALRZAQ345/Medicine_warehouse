@@ -1,66 +1,45 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Features
+1. User Authentication & Account Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+   - User Registration, Login, and Logout: Users can create an account, log in, and log out.
+   - Profile Management: Users can update their account details, change their password, and view their profile.
+   - Password Recovery: An email verification system is used to recover forgotten passwords.
+   - Google Authentication: Users can log in using their Google account.
+   - Account Deletion: Users can delete their account if there are no unpaid orders.
 
-## About Laravel
+2. Admin Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+   + Medicine Management:
+       - Admins can add new medicines to the inventory.
+       - Admins can edit, delete, or restore deleted medicines.
+       - Discounts: Admins can apply discounts to medicines, such as when their expiration date is approaching.
+   + Order Management:
+       - Admins can update the status of orders received by the warehouse.
+       - Admins can assign other users as additional admins of the warehouse.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+3. Notifications System
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    - Expiry Alerts: Sends notifications when a medicine is nearing its expiration date.
+    - Stock Alerts: Notifies when the quantity of a medicine is running low.
+    - Order Notifications: Alerts are sent when a new order is placed by a user.
+    - Order Status Updates: Users receive notifications regarding changes to the status of their orders.
 
-## Learning Laravel
+4. Medicine Browsing for Users
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    - Search and Filter Medicines: Users can browse, search, and filter available medicines.
+    - Favorites: Users can add or remove medicines from their favorite list.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. Order Management for Users
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    - Place Orders: Users can place orders for the medicines they need.
+    - Order Tracking: Users can view their order history and track the status of their orders.
+    - Invoice Generation: Users can download an invoice for their order in Word format.
 
-## Laravel Sponsors
+6. Admin Dashboard
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    - Statistics: Provides insights such as the total number of users, profits, losses, and other key warehouse statistics.
+   - User Analytics: Displays the number of users registered per year and month.
 
-### Premium Partners
+7. System Testing & Security
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    Security Tests: Various tests have been added to ensure the security and proper functionality of the system, with room for future modifications.
