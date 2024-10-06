@@ -55,7 +55,7 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'orderer_id');
     }
 
-    public function favourites()
+    public function favourites(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'favourites');
     }

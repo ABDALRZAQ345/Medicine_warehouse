@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class, 'orderer_id')->constrained('users');
-            $table->unsignedInteger('total_price')->nullable();
+            $table->unsignedInteger('total_price')->default(0);
             $table->integer('status')->default(0);
             $table->boolean('payment_status')->default(0);
             $table->timestamps();

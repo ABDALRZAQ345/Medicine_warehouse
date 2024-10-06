@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpateOrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Jobs\SendNewOrderNotification;
-use App\Jobs\SendOrderStatusUpdatedNotification;
 use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\WordServices;
@@ -37,8 +35,6 @@ class OrderController extends Controller
             ], 400);
         }
 
-        dispatch(new SendNewOrderNotification($order));
-
         return response()->json([
             'message' => 'Order placed successfully',
             'order' => new OrderResource($order),
@@ -64,8 +60,6 @@ class OrderController extends Controller
         $validated = $request->validated();
 
         $order->update($validated);
-
-        dispatch(new SendOrderStatusUpdatedNotification($order));
 
         return response()->json([
             'message' => 'Order status updated successfully',

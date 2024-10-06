@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Medicine\MedicineRequest;
 use App\Http\Resources\MedicineResource;
 use App\Models\Medicine;
-use Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,8 +29,6 @@ class MedicineController extends Controller
     {
 
         $validated = $request->validated();
-        $validated['expires_at'] = now()->addDays($validated['days'] + $validated['months'] * 30 + $validated['years'] * 365);
-        unset($validated['days'], $validated['months'], $validated['years']);
 
         if ($request->photo != null) {
             $validated['photo'] = $request->photo->store('photos', 'public'); // photo path
@@ -69,10 +66,9 @@ class MedicineController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['expires_at'] = now()->addDays($validated['days'] + $validated['months'] * 30 + $validated['years'] * 365);
         try {
             \DB::beginTransaction();
-            $medicine->update(Arr::except($validated, ['days', 'months', 'years']));
+            $medicine->update($validated);
             $medicine->load('manufacturer');
             \DB::commit();
         } catch (\Exception $e) {

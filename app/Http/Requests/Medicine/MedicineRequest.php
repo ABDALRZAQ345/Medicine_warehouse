@@ -33,6 +33,29 @@ class MedicineRequest extends FormRequest
             'years' => ['required', 'integer'],
             'discount' => ['required', 'integer', 'min:0', 'max:100'],
             'photo' => ['nullable', 'image', 'mimes:jpg,png,jpeg', 'max:3072'],
+            'expires_at' => ['required', 'date'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        // Calculate the expires_at date
+        $expiresAt = now()->addDays($this->days + $this->months * 30 + $this->years * 365);
+
+        // Merge the calculated expires_at into the request data
+        $this->merge([
+            'expires_at' => $expiresAt,
+        ]);
+    }
+
+    // Overriding the validated method to exclude days, months, and years
+    public function validated($key = null, $default = null)
+    {
+        $validatedData = parent::validated();
+
+        // Unset the days, months, and years fields so they aren't returned
+        unset($validatedData['days'], $validatedData['months'], $validatedData['years']);
+
+        return $validatedData;
     }
 }

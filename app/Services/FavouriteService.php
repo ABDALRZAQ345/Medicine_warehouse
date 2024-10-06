@@ -4,23 +4,30 @@ namespace App\Services;
 
 class FavouriteService
 {
-    protected const MAX_FAVOURITES = 100;
+    protected $max_favourites;
+
+    public function __construct()
+    {
+        $this->max_favourites = config('app.data.max_favourites');
+    }
 
     public function store($user, $medicine)
     {
+
         try {
             \DB::beginTransaction();
             $favourites = $user->favourites();
 
             if ($favourites->where('medicine_id', $medicine->id)->exists()) {
-                $favourites->detach($medicine->id);
+                $user->favourites()->detach($medicine->id);
                 $message = 'favourite deleted successfully';
 
-            } elseif ($favourites->count() < self::MAX_FAVOURITES) {
-                $favourites->syncWithoutDetaching($medicine);
+            } elseif ($user->favourites->count() < $this->max_favourites) {
+                $user->favourites()->attach($medicine);
                 $message = 'favourite added successfully';
             } else {
-                $message = 'favourite limit exceeded you cant add more than '.self::MAX_FAVOURITES.'medicines to favourites';
+                $message = 'favourite limit exceeded you cant add more than '.$this->max_favourites.' medicines to favourites';
+
             }
             \DB::commit();
 

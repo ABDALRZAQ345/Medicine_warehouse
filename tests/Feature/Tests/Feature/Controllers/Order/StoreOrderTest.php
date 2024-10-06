@@ -35,6 +35,7 @@ class StoreOrderTest extends TestCase
         $this->assertDatabaseHas('medicines', ['quantity' => 45]); // Updated stock
         $this->assertDatabaseHas('order_items', ['medicine_id' => $medicine->id]);
     }
+
     public function test_un_verified_email_can_not_store_order()
     {
         $user = User::factory()->create([
@@ -58,6 +59,7 @@ class StoreOrderTest extends TestCase
         $this->assertDatabaseMissing('medicines', ['quantity' => 45]); // Updated stock
         $this->assertDatabaseMissing('order_items', ['medicine_id' => $medicine->id]);
     }
+
     public function test_it_fails_to_place_order_if_not_enough_stock()
     {
         $user = User::factory()->create();

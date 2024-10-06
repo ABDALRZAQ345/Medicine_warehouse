@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Favourite;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FavouriteCollection;
 use App\Models\Medicine;
 use App\Services\FavouriteService;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class FavouriteController extends Controller
         $user = Auth::user();
 
         return response()->json([
-            'favourites' => $user->favourites,
+            'favourites' => new FavouriteCollection($user->favourites),
         ]);
     }
 }

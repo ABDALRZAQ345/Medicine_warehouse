@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Order;
 use App\Models\User;
+use App\Observers\OrderObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -35,11 +37,12 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useCustomerModel(User::class);
 
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(50)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('email_verification', function (Request $request) {
             return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
         });
+        Order::observe(OrderObserver::class);
 
     }
 }

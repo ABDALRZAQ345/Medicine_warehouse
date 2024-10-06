@@ -132,5 +132,22 @@ class StoreMedicineTest extends TestCase
         // Assert validation errors
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['type', 'scientific_name', 'trade_name', 'price', 'quantity', 'manufacturer_id', 'days', 'months', 'years', 'discount']);
+        $manufactrer = Manufacturer::factory()->create(['name' => 'name']);
+
+        $response = $this->postJson(route('medicines.store'), [
+            'type' => 'tablet',
+            'scientific_name' => 'Test Scientific Name',
+            'trade_name' => 'Test Trade Name',
+            'price' => 100,
+            'quantity' => 50,
+            'manufacturer_id' => $manufactrer->id,
+            'days' => null,
+            'years' => ' ',
+            'discount' => 0,
+        ]);
+
+        // Assert validation errors
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['days', 'months', 'years']);
     }
 }

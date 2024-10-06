@@ -17,12 +17,8 @@ class OrderService
 
             DB::beginTransaction();
 
-            $order = Order::create([
-                'orderer_id' => Auth::id(),
-                'total_price' => $totalPrice, // Temporary, will be updated later
-                'status' => 0,
-                'payment_status' => 0,
-            ]);
+            // Create Order
+            $order = $this->createOrder($totalPrice);
 
             foreach ($validated['medicines'] as $medicineData) {
                 $medicine = Medicine::findOrFail($medicineData['id']);
@@ -30,27 +26,19 @@ class OrderService
 
                 if ($quantity > $medicine->quantity) {
                     DB::rollBack();
-                    throw new \Exception('Not enough medicines available for medicine with id '.$medicineData['id']);
+                    throw new \Exception('Not enough medicines available for medicine with id ' . $medicineData['id']);
                 }
 
                 $totalPrice += ($medicine->price - (($medicine->discount * $medicine->price) / 100.0)) * $quantity;
-
-                $order->items()->create([
-                    'medicine_id' => $medicine->id,
-                    'quantity' => $quantity,
-                    'price' => $medicine->price,
-                    'scientific_name' => $medicine->scientific_name,
-                    'trade_name' => $medicine->trade_name,
-                ]);
-
-                $medicine->quantity -= $medicineData['quantity'];
-                $medicine->save();
+                // Creating order items
+                $this->creatingOrderItems($order, $medicine, $quantity);
 
             }
             ///
 
-            $order->update(['total_price' => $totalPrice]);
-            $order->save();
+            //Update Order
+            $this->updateOrder($order, $totalPrice);
+
             DB::commit();
 
         } catch (\Exception $e) {
@@ -59,5 +47,40 @@ class OrderService
         }
 
         return $order;
+    }
+
+    public function creatingOrderItems($order, $medicine, mixed $quantity): void
+    {
+        $order->items()->create([
+            'medicine_id' => $medicine->id,
+            'quantity' => $quantity,
+            'price' => $medicine->price,
+            'scientific_name' => $medicine->scientific_name,
+            'trade_name' => $medicine->trade_name,
+        ]);
+
+        $medicine->quantity -= $quantity;
+        $medicine->save();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function createOrder(int $totalPrice)
+    {
+        $order = Order::create([
+            'orderer_id' => Auth::id(),
+            'total_price' => $totalPrice, // Temporary, will be updated later
+            'status' => 0,
+            'payment_status' => 0,
+        ]);
+
+        return $order;
+    }
+
+    public function updateOrder(mixed $order, float|int $totalPrice): void
+    {
+        $order->update(['total_price' => $totalPrice]);
+        $order->save();
     }
 }

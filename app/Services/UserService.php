@@ -13,7 +13,8 @@ class UserService
         $users = User::query();
 
         if ($request->filled('role')) {
-            $users->whereHas('roles', fn ($query) => $query->where('name', $request->role));
+            $users->whereRelation('roles', 'name', $request->role);
+            //  $users->whereHas('roles', fn ($query) => $query->where('name', $request->role));
         }
         if ($request->filled('email')) {
             $users->where('email', $request->email);

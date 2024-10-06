@@ -32,5 +32,8 @@ class MedicineResource extends JsonResource
             'expires_at_human' => $data['expires_at_human'], // Ensure this comes before manufacturer
             'manufacturer' => $data['manufacturer'],
         ];
+
+
+
     }
 }

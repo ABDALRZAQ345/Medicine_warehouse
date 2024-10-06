@@ -20,6 +20,8 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::post('/forget_password', [ChangePasswordController::class, 'ForgetPassword'])->name('forget_password');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+        // Socialite Google Authentication
         Route::get('/auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
         Route::get('/auth/google/callback', [SocialiteController::class, 'callbackGoogle'])->name('auth.google.callback');
     });
@@ -27,6 +29,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
     // Authenticated User Routes
     Route::middleware('auth:sanctum')->group(function () {
 
+        // Common Authenticated Routes
         Route::group([], function () {
             Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
             Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
@@ -39,30 +42,47 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
         Route::group([], function () {
 
-            Route::post('/medicines', [MedicineController::class, 'store'])->middleware('role:admin')->name('medicines.store');
-            Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
-            Route::get('/medicines/{medicine}', [MedicineController::class, 'show'])->name('medicines.show');
-            Route::put('/medicines/{medicine}', [MedicineController::class, 'update'])->middleware('role:admin')->name('medicines.update');
-            Route::delete('/medicines/{medicine}', [MedicineController::class, 'destroy'])->middleware('role:admin')->name('medicines.delete');
-            Route::post('/medicines/{medicine}/restore', [MedicineController::class, 'restore'])->middleware('role:admin')->name('medicine.restore');
-            Route::post('/medicines/{medicine}/favourites', [FavouriteController::class, 'store'])->name('favourites.store');
-            Route::get('/favourites', [FavouriteController::class, 'index'])->name('favourites.index');
-            Route::post('/orders', [OrderController::class, 'store'])->middleware(['role:user', 'email_verified'])->name('orders.store');
-            Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-            Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-            Route::put('/orders/{order}', [OrderController::class, 'update'])->middleware('role:admin')->name('orders.update');
-            Route::post('/get_order_invoice/{order}', [OrderController::class, 'get_order_invoice'])->name('get_order_invoice');
+            // Medicine Routes
+            Route::group([], function () {
+                Route::post('/medicines', [MedicineController::class, 'store'])->middleware('role:admin')->name('medicines.store');
+                Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
+                Route::get('/medicines/{medicine}', [MedicineController::class, 'show'])->name('medicines.show');
+                Route::put('/medicines/{medicine}', [MedicineController::class, 'update'])->middleware('role:admin')->name('medicines.update');
+                Route::delete('/medicines/{medicine}', [MedicineController::class, 'destroy'])->middleware('role:admin')->name('medicines.delete');
+                Route::post('/medicines/{medicine}/restore', [MedicineController::class, 'restore'])->middleware('role:admin')->name('medicine.restore');
+            });
+
+            // Favourite Routes
+            Route::group([], function () {
+                Route::post('/medicines/{medicine}/favourites', [FavouriteController::class, 'store'])->name('favourites.store');
+                Route::get('/favourites', [FavouriteController::class, 'index'])->name('favourites.index');
+            });
+
+            //Order Routes
+            Route::group([], function () {
+                Route::post('/orders', [OrderController::class, 'store'])->middleware(['role:user', 'email_verified'])->name('orders.store');
+                Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+                Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+                Route::put('/orders/{order}', [OrderController::class, 'update'])->middleware('role:admin')->name('orders.update');
+                Route::post('/get_order_invoice/{order}', [OrderController::class, 'get_order_invoice'])->name('get_order_invoice');
+            });
 
         });
 
+        //Admin Routes
         Route::middleware(['role:admin'])->group(function () {
             Route::get('/admin_panel', [AdminController::class, 'panel'])->name('admin');
             Route::post('/users/{user}/change_role', [UserManagementController::class, 'change_role'])->middleware('permission:chang_role_permission')->name('change_role');
             Route::get('/users/{user}', [UserManagementController::class, 'show'])->name('user.show');
             Route::get('/users', [UserManagementController::class, 'index'])->name('admins.index');
-            Route::get('/manufacturer', [ManufacturerController::class, 'index'])->name('manufacturer.index');
-            Route::post('/manufacturer', [ManufacturerController::class, 'store'])->name('manufacturer.store');
-            Route::delete('/manufacturer/{manufacturer}', [ManufacturerController::class, 'destroy'])->name('manufacturer.destroy');
+
+            //Manufacturer Routes
+            Route::group([], function () {
+                Route::get('/manufacturer', [ManufacturerController::class, 'index'])->name('manufacturer.index');
+                Route::post('/manufacturer', [ManufacturerController::class, 'store'])->name('manufacturer.store');
+                Route::delete('/manufacturer/{manufacturer}', [ManufacturerController::class, 'destroy'])->name('manufacturer.destroy');
+            });
+
         });
 
     });
